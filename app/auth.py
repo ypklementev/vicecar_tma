@@ -12,23 +12,25 @@ from app.config import settings
 
 
 def verify_telegram_webapp(init_data: str) -> dict:
-    parsed = parse_qsl(init_data, keep_blank_values=True)
+    parts = init_data.split("&")
 
-    data = {}
+    data_parts = []
     hash_from_telegram = None
 
-    for key, value in parsed:
-        if key == "hash":
-            hash_from_telegram = value
-        elif key != "signature":  # ВАЖНО
-            data[key] = value
+    for part in parts:
+        if part.startswith("hash="):
+            hash_from_telegram = part.split("=", 1)[1]
+        elif not part.startswith("signature="):
+            data_parts.append(part)
 
     if not hash_from_telegram:
         raise HTTPException(status_code=400, detail="Invalid Telegram data")
 
-    data_check_string = "\n".join(
-        f"{k}={v}" for k, v in sorted(data.items())
-    )
+    # Сортируем строки целиком
+    data_parts.sort()
+
+    # Склеиваем
+    data_check_string = "\n".join(data_parts)
 
     secret_key = hmac.new(
         settings.BOT_TOKEN.encode(),
@@ -42,14 +44,19 @@ def verify_telegram_webapp(init_data: str) -> dict:
         hashlib.sha256
     ).hexdigest()
 
-    print("DATA CHECK STRING: ", data_check_string)
-    print("TG HASH: ", hash_from_telegram)
-    print("Calculated HASH: ", calculated_hash)
+    print("DATA CHECK STRING:", data_check_string)
+    print("TG HASH:", hash_from_telegram)
+    print("CALC:", calculated_hash)
 
     if not hmac.compare_digest(calculated_hash, hash_from_telegram):
         raise HTTPException(403, "Invalid Telegram signature")
 
-    return data
+    # Теперь уже можно распарсить нормально
+    parsed = dict(parse_qsl(init_data))
+    parsed.pop("hash", None)
+    parsed.pop("signature", None)
+
+    return parsed
 
 
 def get_current_user(
