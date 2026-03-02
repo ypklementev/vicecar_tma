@@ -45,8 +45,9 @@ def verify_telegram_webapp(init_data: str) -> dict:
         hashlib.sha256
     ).hexdigest()
 
-    print("BOT_TOKEN starts with:", settings.BOT_TOKEN[:5])
     print("init_data raw:", repr(init_data))
+    print("TG Hash: ", hash_from_telegram)
+    print("Calculated HASH: ", calculated_hash)
 
     if not hmac.compare_digest(calculated_hash, hash_from_telegram):
         raise HTTPException(
