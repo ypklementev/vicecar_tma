@@ -163,3 +163,49 @@ body {
     from { transform: translateY(100%); }
     to { transform: translateY(0); }
 }
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 14px;
+}
+
+.form-row {
+    display: flex;
+    gap: 12px;
+}
+
+.form-group label {
+    font-size: 13px;
+    margin-bottom: 6px;
+    color: #666;
+}
+
+input {
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    background: #f9f9fb;
+}
+
+input:focus {
+    outline: none;
+    border-color: black;
+    background: white;
+}
+
+button {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 14px;
+    border: none;
+    background: black;
+    color: white;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+button:disabled {
+    opacity: 0.4;
+}

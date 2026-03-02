@@ -98,15 +98,48 @@ function openAddCarModal() {
     const content = document.getElementById("modal-content");
 
     content.innerHTML = `
-        <h3>Добавить автомобиль</h3>
-        <input id="brand" placeholder="Марка">
-        <input id="model" placeholder="Модель">
-        <input id="year" type="number" placeholder="Год">
-        <input id="mileage" type="number" placeholder="Пробег">
-        <button onclick="createCar()">Сохранить</button>
+        <h3>Новый автомобиль</h3>
+
+        <div class="form-group">
+            <label>Марка *</label>
+            <input id="brand" placeholder="BMW">
+        </div>
+
+        <div class="form-group">
+            <label>Модель *</label>
+            <input id="model" placeholder="530d">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Год *</label>
+                <input id="year" type="number" placeholder="2018">
+            </div>
+
+            <div class="form-group">
+                <label>Пробег *</label>
+                <input id="mileage" type="number" placeholder="180000">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>VIN</label>
+            <input id="vin" placeholder="WBA....">
+        </div>
+
+        <div class="form-group">
+            <label>Интервал замены масла (км)</label>
+            <input id="oil_interval" type="number" value="8000">
+        </div>
+
+        <button id="save-car-btn" onclick="createCar()" disabled>
+            Сохранить
+        </button>
     `;
 
     modal.classList.remove("hidden");
+
+    attachCarFormValidation();
 }
 
 function closeModal() {
@@ -287,10 +320,12 @@ async function submitMaintenance() {
 }
 
 async function createCar() {
-    const brand = document.getElementById("brand").value;
-    const model = document.getElementById("model").value;
+    const brand = document.getElementById("brand").value.trim();
+    const model = document.getElementById("model").value.trim();
     const year = parseInt(document.getElementById("year").value);
     const mileage = parseInt(document.getElementById("mileage").value);
+    const vin = document.getElementById("vin").value.trim() || null;
+    const oilInterval = parseInt(document.getElementById("oil_interval").value) || 8000;
 
     await api("/cars/", {
         method: "POST",
@@ -298,7 +333,9 @@ async function createCar() {
             brand,
             model,
             year,
-            current_mileage: mileage
+            vin,
+            current_mileage: mileage,
+            oil_change_interval_km: oilInterval
         })
     });
 
@@ -329,6 +366,23 @@ async function createMaintenance() {
 function goBack() {
     state.view = "cars";
     render();
+}
+
+function attachCarFormValidation() {
+    const requiredFields = ["brand", "model", "year", "mileage"];
+    const button = document.getElementById("save-car-btn");
+
+    requiredFields.forEach(id => {
+        document.getElementById(id).addEventListener("input", validate);
+    });
+
+    function validate() {
+        const isValid = requiredFields.every(id =>
+            document.getElementById(id).value.trim() !== ""
+        );
+
+        button.disabled = !isValid;
+    }
 }
 
 init();
