@@ -26,9 +26,6 @@ def verify_telegram_webapp(init_data: str) -> dict:
     if not hash_from_telegram:
         raise HTTPException(status_code=400, detail="Invalid Telegram data")
 
-    # Убираем signature
-    data.pop("signature", None)
-
     data_check_string = "\n".join(
         f"{k}={v}" for k, v in sorted(data.items())
     )
