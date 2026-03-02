@@ -45,6 +45,7 @@ def verify_telegram_webapp(init_data: str) -> dict:
     print("init_data raw:", repr(init_data))
     print("TG Hash: ", hash_from_telegram)
     print("Calculated HASH: ", calculated_hash)
+    print("DATA STRING HEX: ", data_check_string.encode().hex())
 
     if not hmac.compare_digest(calculated_hash, hash_from_telegram):
         raise HTTPException(
