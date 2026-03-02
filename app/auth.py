@@ -13,7 +13,7 @@ from app.config import settings
 
 def verify_telegram_webapp(init_data: str) -> dict:
     parsed_data = dict(parse_qsl(init_data))
-
+    print(parsed_data)
     hash_from_telegram = parsed_data.pop("hash", None)
 
     if not hash_from_telegram:
@@ -64,6 +64,7 @@ def get_current_user(
 
     # PROD режим (Telegram)
     if not x_telegram_init_data:
+        print("Missing Telegram auth")
         raise HTTPException(status_code=401, detail="Missing Telegram auth")
 
     data = verify_telegram_webapp(x_telegram_init_data)
@@ -71,6 +72,7 @@ def get_current_user(
     user_data = json.loads(data.get("user"))
 
     telegram_id = user_data["id"]
+    print(f"Телеграм ID: {telegram_id}")
 
     user = db.query(User).filter(User.telegram_id == telegram_id).first()
 
@@ -83,6 +85,7 @@ def get_current_user(
         # db.add(user)
         # db.commit()
         # db.refresh(user)
+        print("Нет такого пользователя")
         raise HTTPException(status_code=403, detail="Forbidden")
 
     return user
