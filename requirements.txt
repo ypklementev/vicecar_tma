@@ -1,0 +1,8 @@
+dotenv
+fastapi
+psycopg2-binary
+sqlalchemy
+uvicorn
+alembic
+apscheduler
+requests

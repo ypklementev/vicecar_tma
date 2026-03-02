@@ -1,0 +1,165 @@
+body {
+    margin: 0;
+    background: #f4f5f7;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.app {
+    max-width: 480px;
+    margin: auto;
+    padding: 16px;
+}
+
+.header {
+    margin-bottom: 24px;
+}
+
+#header-title {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+#header-subtitle {
+    font-size: 14px;
+    color: #888;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.15s ease;
+}
+
+.card:active {
+    transform: scale(0.98);
+}
+
+.car-name {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.car-mileage {
+    font-size: 13px;
+    color: #777;
+    margin-top: 4px;
+}
+
+.status {
+    margin-top: 10px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.status-ok {
+    color: #2ecc71;
+}
+
+.status-soon {
+    color: #f39c12;
+}
+
+.status-overdue {
+    color: #e74c3c;
+}
+
+.summary {
+    background: white;
+    border-radius: 24px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.summary-value {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.summary-label {
+    font-size: 13px;
+    color: #888;
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.tab {
+    padding: 8px 14px;
+    border-radius: 20px;
+    background: #e9eaec;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.tab.active {
+    background: black;
+    color: white;
+}
+
+.list-item {
+    background: white;
+    border-radius: 18px;
+    padding: 14px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    background: black;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.fab:active {
+    transform: scale(0.95);
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    width: 100%;
+    max-width: 480px;
+    border-radius: 24px 24px 0 0;
+    padding: 20px;
+    animation: slideUp 0.2s ease;
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
