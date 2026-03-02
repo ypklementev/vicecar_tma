@@ -1,7 +1,7 @@
 import json
 import hashlib
 import hmac
-from urllib.parse import parse_qsl
+from urllib.parse import parse_qs, parse_qsl
 
 from fastapi import Depends, Header, HTTPException
 from sqlalchemy.orm import Session
@@ -12,21 +12,26 @@ from app.config import settings
 
 
 def verify_telegram_webapp(init_data: str) -> dict:
-    parsed = dict(parse_qsl(init_data, keep_blank_values=True))
+    init_data_dict = parse_qs(init_data)
 
-    hash_from_telegram = parsed.pop("hash", None)
-    parsed.pop("signature", None)
-
+    hash_from_telegram = init_data_dict.get("hash", [None])[0]
     if not hash_from_telegram:
-        raise HTTPException(status_code=400, detail="Invalid Telegram data")
+        raise HTTPException(400, "Missing hash")
 
-    data_check_string = "\n".join(
-        f"{k}={v}" for k, v in sorted(parsed.items())
-    )
+    # Собираем поля кроме hash
+    data_check_list = [
+        f"{key}={value[0]}"
+        for key, value in init_data_dict.items()
+        if key != "hash"
+    ]
 
+    data_check_list.sort()
+    data_check_string = "\n".join(data_check_list)
+
+    # ВАЖНО: key="WebAppData", message=BOT_TOKEN
     secret_key = hmac.new(
-        settings.BOT_TOKEN.encode(),
         b"WebAppData",
+        settings.BOT_TOKEN.encode(),
         hashlib.sha256
     ).digest()
 
@@ -36,15 +41,14 @@ def verify_telegram_webapp(init_data: str) -> dict:
         hashlib.sha256
     ).hexdigest()
 
-    print("RAW: ", init_data)
-    print("PARSED: ", parsed)
-    print("TG: ", hash_from_telegram)
-    print("CALC: ", calculated_hash)
+    print("DATA CHECK STRING:", data_check_string)
+    print("TG HASH:", hash_from_telegram)
+    print("CALC:", calculated_hash)
 
     if not hmac.compare_digest(calculated_hash, hash_from_telegram):
         raise HTTPException(403, "Invalid Telegram signature")
 
-    return parsed
+    return {k: v[0] for k, v in init_data_dict.items() if k != "hash"}
 
 
 def get_current_user(
