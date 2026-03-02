@@ -75,13 +75,14 @@ def get_current_user(
     user = db.query(User).filter(User.telegram_id == telegram_id).first()
 
     if not user:
-        user = User(
-            telegram_id=telegram_id,
-            username=user_data.get("username"),
-            first_name=user_data.get("first_name")
-        )
-        db.add(user)
-        db.commit()
-        db.refresh(user)
+        # user = User(
+        #     telegram_id=telegram_id,
+        #     username=user_data.get("username"),
+        #     first_name=user_data.get("first_name")
+        # )
+        # db.add(user)
+        # db.commit()
+        # db.refresh(user)
+        raise HTTPException(status_code=403, detail="Forbidden")
 
     return user
