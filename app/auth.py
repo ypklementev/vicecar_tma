@@ -45,9 +45,8 @@ def verify_telegram_webapp(init_data: str) -> dict:
         hashlib.sha256
     ).hexdigest()
 
-    print("data_check_string RAW:", repr(data_check_string))
-    print("calculated_hash:", calculated_hash)
-    print("hash_from_telegram:", hash_from_telegram)
+    print("BOT_TOKEN starts with:", settings.BOT_TOKEN[:5])
+    print("init_data raw:", repr(init_data))
 
     if not hmac.compare_digest(calculated_hash, hash_from_telegram):
         raise HTTPException(status_code=403, detail="Invalid Telegram signature")
