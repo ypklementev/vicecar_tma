@@ -20,7 +20,7 @@ def verify_telegram_webapp(init_data: str) -> dict:
     for key, value in parsed:
         if key == "hash":
             hash_from_telegram = value
-        else:
+        elif key != "signature":  # ← ВАЖНО
             data[key] = value
 
     if not hash_from_telegram:
@@ -31,8 +31,8 @@ def verify_telegram_webapp(init_data: str) -> dict:
     )
 
     secret_key = hmac.new(
-        settings.BOT_TOKEN.encode(),   # ключ — токен бота
-        b"WebAppData",                 # сообщение — константа "WebAppData"
+        settings.BOT_TOKEN.encode(),
+        b"WebAppData",
         hashlib.sha256
     ).digest()
 
@@ -42,13 +42,8 @@ def verify_telegram_webapp(init_data: str) -> dict:
         hashlib.sha256
     ).hexdigest()
 
-    print("init_data raw:", repr(init_data))
-    print("TG Hash: ", hash_from_telegram)
-    print("Calculated HASH: ", calculated_hash)
-
     if not hmac.compare_digest(calculated_hash, hash_from_telegram):
-        raise HTTPException(
-            status_code=403, detail="Invalid Telegram signature")
+        raise HTTPException(403, "Invalid Telegram signature")
 
     return data
 
