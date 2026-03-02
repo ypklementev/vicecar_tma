@@ -36,6 +36,8 @@ def verify_telegram_webapp(init_data: str) -> dict:
         hashlib.sha256
     ).hexdigest()
 
+    print("RAW: ", init_data)
+    print("PARSED: ", parsed)
     print("TG: ", hash_from_telegram)
     print("CALC: ", calculated_hash)
 
