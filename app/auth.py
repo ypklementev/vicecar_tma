@@ -12,25 +12,17 @@ from app.config import settings
 
 
 def verify_telegram_webapp(init_data: str) -> dict:
-    parts = init_data.split("&")
+    parsed = dict(parse_qsl(init_data, keep_blank_values=True))
 
-    data_parts = []
-    hash_from_telegram = None
-
-    for part in parts:
-        if part.startswith("hash="):
-            hash_from_telegram = part.split("=", 1)[1]
-        elif not part.startswith("signature="):
-            data_parts.append(part)
+    hash_from_telegram = parsed.pop("hash", None)
+    parsed.pop("signature", None)
 
     if not hash_from_telegram:
         raise HTTPException(status_code=400, detail="Invalid Telegram data")
 
-    # Сортируем строки целиком
-    data_parts.sort()
-
-    # Склеиваем
-    data_check_string = "\n".join(data_parts)
+    data_check_string = "\n".join(
+        f"{k}={v}" for k, v in sorted(parsed.items())
+    )
 
     secret_key = hmac.new(
         settings.BOT_TOKEN.encode(),
@@ -44,17 +36,11 @@ def verify_telegram_webapp(init_data: str) -> dict:
         hashlib.sha256
     ).hexdigest()
 
-    print("DATA CHECK STRING:", data_check_string)
-    print("TG HASH:", hash_from_telegram)
-    print("CALC:", calculated_hash)
+    print("TG: ", hash_from_telegram)
+    print("CALC: ", calculated_hash)
 
     if not hmac.compare_digest(calculated_hash, hash_from_telegram):
         raise HTTPException(403, "Invalid Telegram signature")
-
-    # Теперь уже можно распарсить нормально
-    parsed = dict(parse_qsl(init_data))
-    parsed.pop("hash", None)
-    parsed.pop("signature", None)
 
     return parsed
 
