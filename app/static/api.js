@@ -1,5 +1,5 @@
 const tg = window.Telegram?.WebApp;
-const initData = tg?.initData || null;
+const initData = window.Telegram.WebApp.initData;
 
 async function api(url, options = {}) {
     options.headers = {
