@@ -13,7 +13,7 @@ from app.config import settings
 
 def verify_telegram_webapp(init_data: str) -> dict:
     parsed = parse_qsl(init_data, keep_blank_values=True)
-    
+
     data = {}
     hash_from_telegram = None
 
@@ -34,8 +34,8 @@ def verify_telegram_webapp(init_data: str) -> dict:
     )
 
     secret_key = hmac.new(
-        b"WebAppData",
-        settings.BOT_TOKEN.encode(),
+        settings.BOT_TOKEN.encode(),   # ключ — токен бота
+        b"WebAppData",                 # сообщение — константа "WebAppData"
         hashlib.sha256
     ).digest()
 
@@ -49,7 +49,8 @@ def verify_telegram_webapp(init_data: str) -> dict:
     print("init_data raw:", repr(init_data))
 
     if not hmac.compare_digest(calculated_hash, hash_from_telegram):
-        raise HTTPException(status_code=403, detail="Invalid Telegram signature")
+        raise HTTPException(
+            status_code=403, detail="Invalid Telegram signature")
 
     return data
 
