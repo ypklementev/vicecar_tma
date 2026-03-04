@@ -124,7 +124,6 @@ function openAddRepairModal() {
 
     modal.classList.remove("hidden");
     setTimeout(() => document.getElementById('brand')?.focus(), 150);
-    setupKeyboardHandlers(content);
 }
 
 function addRepairItem() {
@@ -187,7 +186,6 @@ function openAddCarModal() {
     setTimeout(() => document.getElementById('brand')?.focus(), 150);
 
     attachCarFormValidation();
-    setupKeyboardHandlers(content);
 }
 
 function closeModal() {
@@ -222,7 +220,6 @@ function openAddMaintenanceModal() {
     renderPresetItems();
     modal.classList.remove("hidden");
     setTimeout(() => document.getElementById('brand')?.focus(), 150);
-    setupKeyboardHandlers(content);
 }
 
 function renderPresetItems() {
