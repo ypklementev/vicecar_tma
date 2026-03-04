@@ -16,8 +16,10 @@ if (tg?.themeParams) {
 }
 
 // Закрытие модалки по клику на фон
-document.getElementById('modal')?.addEventListener('click', (e) => {
-  if (e.target === document.getElementById('modal')) closeModal();
+document.getElementById('modal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('modal')) {
+    closeModal();
+  }
 });
 
 const PRESET_MAINTENANCE = [
@@ -97,6 +99,7 @@ function openAddRepairModal() {
         </div>
 
         <button onclick="submitRepair()">Сохранить</button>
+        <button class="secondary" onclick="closeModal()">Отмена</button>
     `;
 
     modal.classList.remove("hidden");
@@ -154,6 +157,7 @@ function openAddCarModal() {
         <button id="save-car-btn" onclick="createCar()" disabled>
             Сохранить
         </button>
+        <button class="secondary" onclick="closeModal()">Отмена</button>
     `;
 
     modal.classList.remove("hidden");
@@ -162,7 +166,10 @@ function openAddCarModal() {
 }
 
 function closeModal() {
-    document.getElementById("modal").classList.add("hidden");
+  const modal = document.getElementById('modal');
+  modal.classList.add('hidden');
+  const modalContent = document.getElementById('modal-content');
+  modalContent.classList.remove('keyboard-open');
 }
 
 function openAddMaintenanceModal() {
@@ -184,6 +191,7 @@ function openAddMaintenanceModal() {
         <div id="selected-items"></div>
 
         <button onclick="submitMaintenance()">Сохранить</button>
+        <button class="secondary" onclick="closeModal()">Отмена</button>
     `;
 
     renderPresetItems();
@@ -402,6 +410,37 @@ function attachCarFormValidation() {
 
         button.disabled = !isValid;
     }
+}
+
+function setupKeyboardHandlers(modalContent) {
+  const inputs = modalContent.querySelectorAll('input, select, textarea');
+  let activeElement = null;
+
+  const onFocus = (e) => {
+    activeElement = e.target;
+    modalContent.classList.add('keyboard-open');
+    // Дополнительно можно прокрутить поле в видимую область
+    setTimeout(() => {
+      if (activeElement) {
+        activeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
+  const onBlur = () => {
+    // Если другое поле не получило фокус сразу, убираем класс
+    setTimeout(() => {
+      if (!modalContent.contains(document.activeElement)) {
+        modalContent.classList.remove('keyboard-open');
+        activeElement = null;
+      }
+    }, 200);
+  };
+
+  inputs.forEach(input => {
+    input.addEventListener('focus', onFocus);
+    input.addEventListener('blur', onBlur);
+  });
 }
 
 init();
