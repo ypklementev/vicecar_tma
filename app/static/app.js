@@ -1,5 +1,6 @@
 let maintenanceItems = [];
 let repairItems = [];
+let isSwitching = false;
 tg?.ready();
 tg?.expand();
 
@@ -21,6 +22,25 @@ document.getElementById('modal').addEventListener('click', (e) => {
     closeModal();
   }
 });
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !document.getElementById('modal').classList.contains('hidden')) {
+        closeModal();
+    }
+});
+
+function switchTab(tab) {
+    if (isSwitching || state.activeTab === tab) return;
+    isSwitching = true;
+
+    state.activeTab = tab;
+    render();
+
+    // Разблокируем через небольшую задержку (больше, чем длится анимация)
+    setTimeout(() => {
+        isSwitching = false;
+    }, 300);
+}
 
 const PRESET_MAINTENANCE = [
     { type: "oil", name: "Замена масла" },
@@ -103,6 +123,8 @@ function openAddRepairModal() {
     `;
 
     modal.classList.remove("hidden");
+    setTimeout(() => document.getElementById('brand')?.focus(), 150);
+    setupKeyboardHandlers(content);
 }
 
 function addRepairItem() {
@@ -162,7 +184,10 @@ function openAddCarModal() {
 
     modal.classList.remove("hidden");
 
+    setTimeout(() => document.getElementById('brand')?.focus(), 150);
+
     attachCarFormValidation();
+    setupKeyboardHandlers(content);
 }
 
 function closeModal() {
@@ -196,6 +221,8 @@ function openAddMaintenanceModal() {
 
     renderPresetItems();
     modal.classList.remove("hidden");
+    setTimeout(() => document.getElementById('brand')?.focus(), 150);
+    setupKeyboardHandlers(content);
 }
 
 function renderPresetItems() {
@@ -413,34 +440,32 @@ function attachCarFormValidation() {
 }
 
 function setupKeyboardHandlers(modalContent) {
-  const inputs = modalContent.querySelectorAll('input, select, textarea');
-  let activeElement = null;
+    const inputs = modalContent.querySelectorAll('input, select, textarea');
+    let activeElement = null;
 
-  const onFocus = (e) => {
-    activeElement = e.target;
-    modalContent.classList.add('keyboard-open');
-    // Дополнительно можно прокрутить поле в видимую область
-    setTimeout(() => {
-      if (activeElement) {
-        activeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
-      }
-    }, 100);
-  };
+    const onFocus = (e) => {
+        activeElement = e.target;
+        modalContent.classList.add('keyboard-open');
+        setTimeout(() => {
+            if (activeElement) {
+                activeElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            }
+        }, 100);
+    };
 
-  const onBlur = () => {
-    // Если другое поле не получило фокус сразу, убираем класс
-    setTimeout(() => {
-      if (!modalContent.contains(document.activeElement)) {
-        modalContent.classList.remove('keyboard-open');
-        activeElement = null;
-      }
-    }, 200);
-  };
+    const onBlur = () => {
+        setTimeout(() => {
+            if (!modalContent.contains(document.activeElement)) {
+                modalContent.classList.remove('keyboard-open');
+                activeElement = null;
+            }
+        }, 200);
+    };
 
-  inputs.forEach(input => {
-    input.addEventListener('focus', onFocus);
-    input.addEventListener('blur', onBlur);
-  });
+    inputs.forEach(input => {
+        input.addEventListener('focus', onFocus);
+        input.addEventListener('blur', onBlur);
+    });
 }
 
 init();

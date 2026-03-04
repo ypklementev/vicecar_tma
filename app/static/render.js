@@ -28,20 +28,21 @@ function renderCars(container) {
         card.onclick = () => openCar(car.id);
         grid.appendChild(card);
     });
+
+    // Плавное появление сетки
+    container.classList.add('fade-in');
+    setTimeout(() => container.classList.remove('fade-in'), 200);
 }
 
 async function renderCar(container) {
     const car = state.cars.find(c => c.id === state.currentCarId);
 
-    document.getElementById("header-title").innerText =
-        `${car.brand} ${car.model}`;
-    document.getElementById("header-subtitle").innerText = "";
-
     document.getElementById("header-title").innerHTML =
         `<span onclick="goBack()" style="cursor:pointer">←</span> 
-     ${car.brand} ${car.model}`;
+         ${car.brand} ${car.model}`;
+    document.getElementById("header-subtitle").innerText = "";
 
-    const oil = await api(`/cars/${car.id}/oil-status`);
+    const oil = await api(`/cars/${car.id}/oil-status`); // можно заменить на реальные данные
 
     container.innerHTML = `
         <div class="summary">
@@ -59,64 +60,59 @@ async function renderCar(container) {
         <div id="tab-content"></div>
     `;
 
-    renderTabContent();
+    // Рендерим содержимое вкладки с анимацией
+    await renderTabContent();
 }
 
 async function renderTabContent() {
     const container = document.getElementById("tab-content");
-
     if (!container) return;
 
-    if (state.activeTab === "maintenance") {
-        const records = await api(`/maintenance/${state.currentCarId}`);
+    // Показываем спиннер с плавным появлением
+    container.innerHTML = `<div class="loader"></div>`;
+    container.classList.add('fade-in');
+    setTimeout(() => container.classList.remove('fade-in'), 200);
 
-        if (!records.length) {
-            container.innerHTML = `<div class="list-item">Нет записей ТО</div>`;
-            return;
+    try {
+        let records;
+        if (state.activeTab === "maintenance") {
+            records = await api(`/maintenance/${state.currentCarId}`);
+        } else {
+            records = await api(`/cars/${state.currentCarId}/service-book`);
         }
 
-        container.innerHTML = "";
-
-        records.forEach(record => {
-            const div = document.createElement("div");
-            div.className = "list-item";
-
-            div.innerHTML = `
-                <strong>${new Date(record.date).toLocaleDateString()}</strong><br>
-                ${record.mileage} км<br>
-                ${record.total_cost} ₽
-            `;
-
-            container.appendChild(div);
-        });
-    }
-
-    if (state.activeTab === "service") {
-        const records = await api(`/cars/${state.currentCarId}/service-book`);
-
-        const container = document.getElementById("tab-content");
-
+        // Формируем HTML
+        let html = '';
         if (!records.length) {
-            container.innerHTML = `<div class="list-item">Записей нет</div>`;
-            return;
+            html = `<div class="list-item">Нет записей</div>`;
+        } else {
+            records.forEach(record => {
+                if (state.activeTab === "maintenance") {
+                    html += `
+                        <div class="list-item">
+                            <strong>${new Date(record.date).toLocaleDateString()}</strong><br>
+                            ${record.mileage} км<br>
+                            ${record.total_cost} ₽
+                        </div>
+                    `;
+                } else {
+                    const typeLabel = record.type === "maintenance" ? "🛠 ТО" : "🔧 Ремонт";
+                    html += `
+                        <div class="list-item">
+                            <strong>${new Date(record.date).toLocaleDateString()}</strong><br>
+                            ${typeLabel} | ${record.mileage} км<br>
+                            ${record.total_cost} ₽
+                        </div>
+                    `;
+                }
+            });
         }
 
-        container.innerHTML = "";
-
-        records.forEach(record => {
-            const div = document.createElement("div");
-            div.className = "list-item";
-
-            const typeLabel =
-                record.type === "maintenance" ? "ТО" : "Ремонт";
-
-            div.innerHTML = `
-            <strong>${new Date(record.date).toLocaleDateString()}</strong><br>
-            ${typeLabel} | ${record.mileage} км<br>
-            ${record.total_cost} ₽
-        `;
-
-            container.appendChild(div);
-        });
+        // Плавно заменяем спиннер на контент
+        container.innerHTML = html;
+        container.classList.add('fade-in');
+        setTimeout(() => container.classList.remove('fade-in'), 200);
+    } catch (error) {
+        container.innerHTML = `<div class="list-item">Ошибка загрузки. Потяните для обновления</div>`;
     }
 }
