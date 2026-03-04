@@ -1,6 +1,5 @@
 let maintenanceItems = [];
 let repairItems = [];
-const tg = window.Telegram?.WebApp;
 tg?.ready();
 tg?.expand();
 
