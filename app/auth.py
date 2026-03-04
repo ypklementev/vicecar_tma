@@ -18,7 +18,6 @@ def verify_telegram_webapp(init_data: str) -> dict:
     if not hash_from_telegram:
         raise HTTPException(400, "Missing hash")
 
-    # Собираем поля кроме hash
     data_check_list = [
         f"{key}={value[0]}"
         for key, value in init_data_dict.items()
@@ -28,7 +27,6 @@ def verify_telegram_webapp(init_data: str) -> dict:
     data_check_list.sort()
     data_check_string = "\n".join(data_check_list)
 
-    # ВАЖНО: key="WebAppData", message=BOT_TOKEN
     secret_key = hmac.new(
         b"WebAppData",
         settings.BOT_TOKEN.encode(),

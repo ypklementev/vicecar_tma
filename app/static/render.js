@@ -46,7 +46,7 @@ async function renderCar(container) {
     container.innerHTML = `
         <div class="summary">
             <div class="summary-value">${car.current_mileage} км</div>
-            <div class="summary-label">Пробег</div>
+            <div class="summary-label">📍 Текущий пробег</div>
         </div>
 
         <div class="tabs">

@@ -1,5 +1,25 @@
 let maintenanceItems = [];
 let repairItems = [];
+const tg = window.Telegram?.WebApp;
+tg?.ready();
+tg?.expand();
+
+// Устанавливаем CSS-переменные темы
+if (tg?.themeParams) {
+  const root = document.documentElement;
+  root.style.setProperty('--tg-bg-color', tg.themeParams.bg_color || '#f4f5f7');
+  root.style.setProperty('--tg-text-color', tg.themeParams.text_color || '#000000');
+  root.style.setProperty('--tg-button-color', tg.themeParams.button_color || '#000000');
+  root.style.setProperty('--tg-button-text-color', tg.themeParams.button_text_color || '#ffffff');
+  root.style.setProperty('--tg-hint-color', tg.themeParams.hint_color || '#888888');
+  root.style.setProperty('--tg-link-color', tg.themeParams.link_color || '#2481cc');
+  root.style.setProperty('--tg-secondary-bg-color', tg.themeParams.secondary_bg_color || '#e9eaec');
+}
+
+// Закрытие модалки по клику на фон
+document.getElementById('modal')?.addEventListener('click', (e) => {
+  if (e.target === document.getElementById('modal')) closeModal();
+});
 
 const PRESET_MAINTENANCE = [
     { type: "oil", name: "Замена масла" },
