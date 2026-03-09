@@ -7,8 +7,18 @@ from app.models import Base
 from app.routers import cars, maintenance, repairs, users
 from app.scheduler import start_scheduler
 from app.schemas import Message
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # разрешить все домены
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(cars.router)
 app.include_router(maintenance.router)
 app.include_router(users.router)
@@ -23,7 +33,7 @@ def startup_event():
 
 @app.get("/")
 def serve_app():
-    return FileResponse("app/static/index.html")
+    return "root /"
 
 # @app.post("/send_message")
 # def sender(message: Message):

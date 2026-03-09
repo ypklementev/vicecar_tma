@@ -1,0 +1,107 @@
+@use '@/styles/variables' as *
+@use "sass:color"
+
+
+.default-button
+  border: none
+  outline: none
+  font-weight: 500
+  border-radius: $xxxl
+  padding: $xl $xxxxl
+  width: 100%
+  align-self: center
+  display: flex
+  align-items: center
+  justify-content: center
+  background-color: $text-color
+  color: $background-color
+  cursor: pointer
+  transition: background-color .1s ease
+
+  &:active
+    background-color: color.adjust($text-color, $lightness: 30%)
+    color: $background-color
+
+
+.input-wrapper
+  display: flex
+  flex-direction: column
+  gap: $xs
+  width: 100%
+
+  .custom-input.error
+    border-color: #ff4d4f
+
+  .input-error
+    font-size: 12px
+    color: #ff4d4f
+    margin-left: $xs
+
+  .label
+    font-size: $font-sm
+    color: color.adjust($text-color, $lightness: 30%)
+    pointer-events: none
+    margin-left: $xs
+
+  .custom-input
+    padding: $lg $xl
+    border-radius: $md
+    outline: none
+    background-color: $background-color
+    border: 1px solid $border-color
+    transition: background-color .2s ease
+
+    &:focus
+      background-color: $modal-background
+
+  .autocomplete
+    position: relative
+
+    .suggestions
+      position: absolute
+      bottom: calc(100%)
+      left: 0
+      width: 100%
+      background-color: $modal-background
+      overflow-y: auto
+      max-height: 11.5em
+      display: flex
+      flex-direction: column
+      border-radius: $md $md 0 0
+      border: 1px solid $border-color
+
+      span
+        padding: $xl
+        cursor: pointer
+
+.maintenance-list
+  display: flex
+  flex-direction: column
+  gap: $lg
+  padding: $lg
+  border: 1px solid $border-color
+  border-radius: $xl
+
+  .maintenance-item
+    display: flex
+    flex-direction: row
+    gap: $md
+    button
+      height: 38px
+      width: 38px
+      font-size: 24px
+      align-self: flex-end
+      border: 1px solid $border-color
+      background-color: $background-color
+      border-radius: $md
+      cursor: pointer
+
+.row
+  display: flex
+  gap: $lg
+
+  .input-wrapper
+    flex: 1
+
+    .custom-input
+      width: 100%

@@ -11,7 +11,7 @@ async function api(url, options = {}) {
         options.headers["X-Telegram-Init-Data"] = initData;
     }
 
-    const res = await fetch(url, options);
+    const res = await fetch('http://localhost:8000' + url, options);
     if (!res.ok) throw new Error(await res.text());
     return res.json();
 }

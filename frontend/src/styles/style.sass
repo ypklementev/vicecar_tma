@@ -1,0 +1,242 @@
+@use './variables' as *
+@use 'sass:color'
+@import url('https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400..800&display=swap')
+
+
+*
+  font-family: "Wix Madefor Display", sans-serif
+  font-optical-sizing: auto
+  font-style: normal
+  padding: 0
+  margin: 0
+  box-sizing: border-box
+  color: $text-color
+  font-size: $font-md
+
+html
+  background-color: $background-color
+  scroll-behavior: smooth
+
+body
+  overflow-x: hidden
+
+
+.app
+  position: relative
+  height: $height
+  min-height: $height
+  padding: $safe-top + $md $safe-right + $md $safe-bottom + $md $safe-left + $md
+
+  .loader-container
+    position: absolute
+    inset: 50%
+    transform: translate(-50%, -50%)
+    width: min-content
+    height: min-content
+
+    .loader
+      width: 32px
+      height: 32px
+      border: 5px solid color.adjust($text-color, $lightness: 30%)
+      border-bottom-color: transparent
+      border-radius: 50%
+      display: inline-block
+      box-sizing: border-box
+      animation: rotation 1s linear infinite
+
+      @keyframes rotation
+        0%
+          transform: rotate(0deg)
+        100%
+          transform: rotate(360deg)
+
+  .open-modal
+    cursor: pointer
+    display: flex
+    width: 56px
+    height: 56px
+    background-color: $text-color
+    position: absolute
+    right: $xl
+    bottom: $xl
+    font-size: 40px
+    line-height: 48px
+    color: $background-color
+    align-items: center
+    justify-content: center
+    border-radius: 50%
+
+  h3
+    font-size: $font-lg
+
+  .error
+    font-size: $font-md
+    color: #ff4d4f
+
+  .topline
+    width: 100%
+    padding: $xxl
+    margin-bottom: $lg
+
+    .name
+      display: flex
+      gap: $xxl
+
+      & > .skeleton
+        @include skeleton($md, 32px, 50%)
+
+      div.skeleton
+        @include skeleton($sm, $font-md, 50vw)
+
+      .names.skeleton-container
+        display: flex
+        flex-direction: column
+        gap: $sm
+
+        h1.skeleton
+          @include skeleton($lg, 30px, clamp(100px, 60vw, 200px))
+        span.skeleton
+          @include skeleton($md, 16px, clamp(100px, 40vw, 200px))
+
+      .back
+        display: flex
+        width: 1rem + $lg + $lg
+        height: 32px
+        cursor: pointer
+        padding: 0 $lg
+        align-self: center
+
+        &:after
+          content: ''
+          background: url('@/assets/arrow-back.svg') no-repeat center center
+          background-size: 16px
+          color: $text-color
+          width: 16px
+          height: 32px
+
+    h1
+      font-size: $font-xxxl
+
+    span
+      font-size: $font-sm
+      color: color.adjust($text-color, $lightness: 30%)
+
+    .menu-container
+      margin-top: $xxl
+      position: relative
+      display: flex
+      flex-direction: column
+      align-items: start
+      height: 24px
+
+      menu
+        display: flex
+        gap: $xl
+        position: relative
+        list-style: none
+
+        .menu-item
+          position: relative
+          padding-bottom: $sm
+          cursor: pointer
+
+      .underline
+        position: absolute
+        bottom: 0
+        height: $xs
+        width: 0
+        background-color: $text-color
+
+  .overlay
+    position: fixed
+    inset: 0
+    background: rgba(0,0,0,0.5)
+    opacity: 0
+    pointer-events: none
+    z-index: 10
+
+  .modal
+    position: fixed
+    inset: 0
+    display: flex
+    align-items: flex-end
+    justify-content: center
+    pointer-events: none
+    z-index: 11
+    transform: translateY(100vh)
+    align-self: end
+
+  .modal-content
+    background: $modal-background
+    width: 100%
+    border-radius: $xxxl $xxxl 0 0
+    padding: $xxl
+    pointer-events: auto
+    display: flex
+    flex-direction: column
+    gap: $xxl
+    height: 100%
+    overflow-y: auto
+    padding-bottom: 50px + $safe-bottom
+    max-height: 80vh
+
+  .content-wrapper
+    display: flex
+    width: 200vw
+
+    .page-content
+      width: 100vw
+
+  .page-content
+    padding: 0 $xxl
+
+    &.cars
+      display: grid
+      grid-template-columns: repeat(auto-fill, minmax(160px, 2fr))
+      grid-template-rows: min-content
+      gap: $xl
+
+      .car-card
+        display: flex
+        gap: $sm
+        min-height: 76px
+        height: min-content
+        flex-direction: column
+        cursor: pointer
+        padding: $xxl
+        background-color: $modal-background
+        border-radius: $xl
+        @include card-shadow
+
+        &.skeleton
+          @include skeleton($xl, 76px)
+
+        h3
+          font-size: clamp($font-md, 4.5vw, $font-lg)
+
+        span
+          font-size: $font-sm
+          color: color.adjust($text-color, $lightness: 30%)
+
+  .maintenance-container
+    display: flex
+    flex-direction: column
+    gap: $xl
+
+    .maintenance-item
+      display: flex
+      flex-direction: column
+      gap: $sm
+      padding: $xl $xxl
+      border-radius: $xl
+      background-color: $modal-background
+      @include card-shadow
+
+      span
+        font-size: $font-sm
+        color: color.adjust($text-color, $lightness: 30%)
+
+      div.info
+        display: flex
+        flex-direction: row
+        justify-content: space-between
