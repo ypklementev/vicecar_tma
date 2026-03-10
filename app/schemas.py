@@ -33,6 +33,15 @@ class RepairItemCreate(BaseModel):
     name: str
     cost: float
 
+class RepairItemUpdate(BaseModel):
+    name: str | None = None
+    cost: float | None = None
+    type: str | None = None
+
+class RepairUpdate(BaseModel):
+    date: datetime | None = None
+    mileage: int | None = None
+    comment: str | None = None
 
 class RepairCreate(BaseModel):
     date: datetime
@@ -65,6 +74,7 @@ class RepairItemResponse(BaseModel):
     id: int
     name: str
     cost: float
+    type: str | None
 
     class Config:
         from_attributes = True
