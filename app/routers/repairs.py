@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from typing import List, Optional
 from datetime import datetime
 
@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from app.database import get_db
 from app.models import Car, RepairRecord, RepairItem, User
 from app.auth import get_current_user
-from app.schemas import RepairCreate
+from app.schemas import RepairCreate, RepairRecordResponse
 
 router = APIRouter(
     prefix="/repairs",
@@ -66,7 +66,7 @@ def create_repair(
     return repair
 
 
-@router.get("/{car_id}")
+@router.get("/{car_id}", response_model=list[RepairRecordResponse])
 def get_repairs(
     car_id: int,
     db: Session = Depends(get_db),
@@ -80,8 +80,12 @@ def get_repairs(
     if not car:
         raise HTTPException(status_code=404, detail="Car not found")
 
-    repairs = db.query(RepairRecord).filter(
-        RepairRecord.car_id == car.id
-    ).order_by(RepairRecord.date.desc()).all()
+    repairs = (
+        db.query(RepairRecord)
+        .options(selectinload(RepairRecord.items))
+        .filter(RepairRecord.car_id == car.id)
+        .order_by(RepairRecord.date.desc())
+        .all()
+    )
 
     return repairs

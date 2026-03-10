@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from datetime import datetime
 from pydantic import BaseModel
 from app.database import get_db
 from app.models import MaintenanceItem, MaintenanceRecord, Car, User
 from app.auth import get_current_user
-from app.schemas import MaintenanceCreate
+from app.schemas import MaintenanceCreate, MaintenanceRecordResponse
 
 router = APIRouter(
     prefix="/maintenance",
@@ -60,7 +60,7 @@ def create_maintenance(
     return maintenance
 
 
-@router.get("/{car_id}")
+@router.get("/{car_id}", response_model=list[MaintenanceRecordResponse])
 def get_maintenance_history(
     car_id: int,
     db: Session = Depends(get_db),
@@ -74,8 +74,12 @@ def get_maintenance_history(
     if not car:
         raise HTTPException(status_code=404, detail="Car not found")
 
-    records = db.query(MaintenanceRecord).filter(
-        MaintenanceRecord.car_id == car.id
-    ).order_by(MaintenanceRecord.date.desc()).all()
+    records = (
+        db.query(MaintenanceRecord)
+        .options(selectinload(MaintenanceRecord.items))
+        .filter(MaintenanceRecord.car_id == car.id)
+        .order_by(MaintenanceRecord.date.desc())
+        .all()
+    )
 
     return records
