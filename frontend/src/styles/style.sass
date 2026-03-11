@@ -22,27 +22,40 @@ body
 
 
 .app
+  display: flex
+  flex-direction: column
   position: relative
   height: $height
   min-height: $height
   padding: $safe-top + $md $safe-right + $md $safe-bottom + $md $safe-left + $md
 
   .loader-container
-    position: absolute
-    inset: 50%
-    transform: translate(-50%, -50%)
     width: min-content
     height: min-content
 
+    &.page
+      position: absolute
+      inset: 50% 25%
+      display: flex
+      transform: translate(-50%, -50%)
+
     .loader
-      width: 32px
-      height: 32px
-      border: 5px solid color.adjust($text-color, $lightness: 30%)
-      border-bottom-color: transparent
       border-radius: 50%
       display: inline-block
       box-sizing: border-box
       animation: rotation 1s linear infinite
+
+      &.mobile
+        width: $font-md
+        height: $font-md
+        border: 3px solid $background-color
+        border-bottom-color: transparent
+
+      &.page
+        width: 32px
+        height: 32px
+        border: 4px solid color.adjust($text-color, $lightness: 0%)
+        border-bottom-color: transparent
 
       @keyframes rotation
         0%
@@ -83,20 +96,24 @@ body
       gap: $xxl
 
       & > .skeleton
-        @include skeleton($md, 32px, 50%)
+        @include skeleton(32px, $md, 50%)
 
       div.skeleton
-        @include skeleton($sm, $font-md, 50vw)
+        @include skeleton($font-md, $sm, 50vw)
 
-      .names.skeleton-container
-        display: flex
-        flex-direction: column
-        gap: $sm
+      .names
+        max-width: 100%
+        overflow-x: hidden
 
-        h1.skeleton
-          @include skeleton($lg, 30px, clamp(100px, 60vw, 200px))
-        span.skeleton
-          @include skeleton($md, 16px, clamp(100px, 40vw, 200px))
+        &.skeleton-container
+          display: flex
+          flex-direction: column
+          gap: $sm
+
+          h1.skeleton
+            @include skeleton(30px, $lg, clamp(100px, 60vw, 200px))
+          span.skeleton
+            @include skeleton(16px, $md, clamp(100px, 40vw, 200px))
 
       .back
         display: flex
@@ -116,6 +133,8 @@ body
 
     h1
       font-size: $font-xxxl
+      text-overflow: ellipsis
+      overflow-x: hidden
 
     span
       font-size: $font-sm
@@ -183,12 +202,20 @@ body
   .content-wrapper
     display: flex
     width: 200vw
+    height: 100%
 
     .page-content
       width: 100vw
+      height: 100%
 
   .page-content
     padding: 0 $xxl
+
+    .empty-page
+      color: color.adjust($text-color, $lightness: 30%)
+      font-size: $font-sm
+      text-align: center
+      pointer-events: none
 
     &.cars
       display: grid
@@ -208,11 +235,17 @@ body
         border-radius: $xl
         @include card-shadow
 
+        &:first-child
+          grid-column: 1 / -1
+
         &.skeleton
-          @include skeleton($xl, 76px)
+          @include skeleton(76px, $xl)
 
         h3
           font-size: clamp($font-md, 4.5vw, $font-lg)
+          white-space: nowrap
+          overflow: hidden
+          text-overflow: ellipsis
 
         span
           font-size: $font-sm
@@ -240,3 +273,6 @@ body
         display: flex
         flex-direction: row
         justify-content: space-between
+
+      &.skeleton
+        @include skeleton(75px)

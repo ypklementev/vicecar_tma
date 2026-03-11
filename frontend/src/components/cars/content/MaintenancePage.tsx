@@ -1,17 +1,28 @@
 import {useGetMaintenance} from "@/api/api.ts";
-import {useAppContext} from "@/context/AppContext.tsx";
+import { useMatch } from "react-router-dom"
+import {PageLoader} from "@/components/Loader.tsx";
+
 
 export const MaintenancePage = () => {
-  const { car } = useAppContext();
-  const maintenance = car ? useGetMaintenance(car.id) : null
+  const match = useMatch("/car/:id")
+  const carId = match ? Number(match.params.id) : undefined
+  const maintenance = useGetMaintenance(carId)
 
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString("ru-RU")
   }
 
+  if (maintenance.isLoading) {
+    return <PageLoader />
+  }
+
+  if (maintenance.data && maintenance.data.length === 0) return (
+    <div className="empty-page">Нет записей</div>
+  )
+
   return (
     <div className="maintenance-container">
-      {maintenance && maintenance.data && (maintenance.data.map((item) => (
+      {maintenance.data && (maintenance.data.map((item) => (
         <div
           className='maintenance-item'
           key={item.id}
@@ -22,7 +33,6 @@ export const MaintenancePage = () => {
             <span className='mileage'>{item.mileage} км</span>
             <span className='date'>{formatDate(item.date)}</span>
           </div>
-
         </div>
       )))}
     </div>

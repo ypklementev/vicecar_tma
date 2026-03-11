@@ -5,6 +5,7 @@ $background-color: #f4f5f7
 $text-color: #171717
 $border-color: #d8d8d8
 $modal-background: #fff
+$error-color: #f5222f
 
 
 // sizing
@@ -34,14 +35,14 @@ $safe-right: var(--tg-safe-area-inset-right, 0px)
 
 $height: var(--tg-viewport-height, 100vh)
 
-@mixin skeleton($radius: $lg, $height: $xxl, $width: 100%)
+@mixin skeleton($height: $xxl, $radius: $lg, $width: 100%)
   display: block
   position: relative
   overflow: hidden
   height: $height
   width: $width
   border-radius: $radius
-  background: color.adjust($background-color, $blackness: 8%)
+  background: color.adjust($background-color, $blackness: 5%)
 
   &::after
     content: ""

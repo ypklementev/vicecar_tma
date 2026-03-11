@@ -1,13 +1,13 @@
-import React, {type ButtonHTMLAttributes} from "react";
+import React, {type ButtonHTMLAttributes, type ReactNode} from "react";
 
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  label: string;
+  label: string | ReactNode
 }
 
 export const Button: React.FC<ButtonProps> = ({ label, ...rest }) => {
   return (
-    <button {...rest} className="default-button">
+    <button className="default-button" {...rest}>
       {label}
     </button>
   )

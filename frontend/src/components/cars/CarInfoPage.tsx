@@ -1,4 +1,3 @@
-import {Loader} from "@/components/Loader.tsx"
 import {useAppContext} from "@/context/AppContext.tsx"
 import {useEffect, useRef} from "react"
 import {MaintenancePage} from "@/components/cars/content/MaintenancePage.tsx"
@@ -7,7 +6,7 @@ import gsap from "gsap"
 
 
 export const CarInfoPage = () => {
-  const { cars, user, activePage } = useAppContext()
+  const { activePage } = useAppContext()
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -19,8 +18,6 @@ export const CarInfoPage = () => {
       ease: "power3.out"
     })
   }, [activePage])
-
-  if (cars.isLoading || user.isLoading) return <Loader />
 
   return (
     <div className="content-wrapper" ref={contentRef}>

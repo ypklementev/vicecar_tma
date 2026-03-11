@@ -1,4 +1,4 @@
-import {type ChangeEvent, useRef, useState} from "react"
+import {type ChangeEvent, type RefObject, useState} from "react"
 import {Input} from "@/shared/ui/input.tsx"
 import {Button} from "@/shared/ui/button.tsx"
 import {useAppContext} from "@/context/AppContext.tsx"
@@ -15,9 +15,12 @@ type SelectedMaintenance = {
   cost: string
 }
 
-export const AddMaintenanceModal = () => {
+interface AddMaintenanceModalProps {
+  debounceRef: RefObject<number | null>
+}
+
+export const AddMaintenanceModal = ({ debounceRef } : AddMaintenanceModalProps) => {
   const { car } = useAppContext();
-  const debounceRef = useRef<number | null>(null)
   const [query, setQuery] = useState("")
   const [selected, setSelected] = useState<SelectedMaintenance[]>([])
 

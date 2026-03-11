@@ -7,6 +7,7 @@ const LoadingCars = () => {
     <div className='page-content cars'>
       <div className='car-card skeleton'/>
       <div className='car-card skeleton'/>
+      <div className='car-card skeleton'/>
     </div>
   )
 }

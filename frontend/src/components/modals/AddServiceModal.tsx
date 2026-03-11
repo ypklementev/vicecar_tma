@@ -1,10 +1,13 @@
-import {type ChangeEvent, useRef, useState} from "react";
+import {type ChangeEvent, type RefObject, useState} from "react";
 import {Input} from "@/shared/ui/input.tsx";
 import {Button} from "@/shared/ui/button.tsx";
 
-export const AddServiceModal = () => {
-  const debounceRef = useRef<number | null>(null);
 
+interface AddServiceModalProps {
+  debounceRef: RefObject<number | null>
+}
+
+export const AddServiceModal = ({ debounceRef } : AddServiceModalProps) => {
   const [values, setValues] = useState({
     type: "",
     name: "",

@@ -57,3 +57,11 @@ export interface CarService {
 }
 
 export type CarsService = CarService[]
+
+export interface AddCar {
+  "brand": string,
+  "model": string,
+  "year": number,
+  "vin": string,
+  "current_mileage": number,
+}

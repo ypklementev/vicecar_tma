@@ -18,6 +18,14 @@
   cursor: pointer
   transition: background-color .1s ease
 
+  &.active
+    background-color: color.adjust($text-color, $lightness: 30%)
+
+  &.error
+    color: $error-color
+    background-color: transparent
+    border: 1px solid $error-color
+
   &:active
     background-color: color.adjust($text-color, $lightness: 30%)
     color: $background-color
