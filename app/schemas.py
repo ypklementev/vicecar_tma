@@ -33,9 +33,67 @@ class RepairItemCreate(BaseModel):
     name: str
     cost: float
 
+class RepairItemUpdate(BaseModel):
+    name: str | None = None
+    cost: float | None = None
+    type: str | None = None
+
+class RepairUpdate(BaseModel):
+    date: datetime | None = None
+    mileage: int | None = None
+    comment: str | None = None
 
 class RepairCreate(BaseModel):
     date: datetime
     mileage: int
     comment: str | None
     items: List[RepairItemCreate]
+
+class MaintenanceItemResponse(BaseModel):
+    id: int
+    name: str
+    cost: float
+
+    class Config:
+        from_attributes = True
+
+class MaintenanceRecordResponse(BaseModel):
+    id: int
+    car_id: int
+    date: datetime
+    mileage: int
+    total_cost: float
+    comment: str | None
+
+    items: List[MaintenanceItemResponse]
+
+    class Config:
+        from_attributes = True
+
+class RepairItemResponse(BaseModel):
+    id: int
+    name: str
+    cost: float
+    type: str | None
+
+    class Config:
+        from_attributes = True
+
+class RepairRecordResponse(BaseModel):
+    id: int
+    car_id: int
+    date: datetime
+    mileage: int
+    total_cost: float
+    comment: str | None
+
+    items: List[RepairItemResponse]
+
+    class Config:
+        from_attributes = True
+
+class UserResponse(BaseModel):
+    id: int
+    telegram_id: int
+    first_name: str
+    username: str
