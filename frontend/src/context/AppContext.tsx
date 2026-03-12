@@ -15,7 +15,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [ addModalOpen, setAddModalOpen ] = useState<boolean>(false)
   const [ isBtnLoading, setIsBtnLoading ] = useState<boolean>(false)
   const [ activeCar, setActiveCar ] = useState<number>(0)
-  const [activePage, setActivePage] = useState<"maintenance" | "service">("maintenance")
+  // const [activePage, setActivePage] = useState<"maintenance" | "service">("maintenance")
   const [car, setCar] = useState<Car | null>(null)
   const user = useGetUser()
   const cars = useGetCars()
@@ -37,8 +37,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         cars,
         car,
         setCar,
-        activePage,
-        setActivePage,
+        // activePage,
+        // setActivePage,
       }}
     >
       {children}

@@ -1,7 +1,11 @@
-import {type ChangeEvent, type RefObject, useState} from "react"
+import React, {type ChangeEvent, type RefObject, useState} from "react"
 import {Input} from "@/shared/ui/input.tsx"
 import {Button} from "@/shared/ui/button.tsx"
 import {useAppContext} from "@/context/AppContext.tsx"
+import type {Maintenance} from "@/types/types.ts";
+import {useAddMaintenance} from "@/api/api.ts";
+import {useMatch} from "react-router-dom";
+import {Loader} from "@/components/Loader.tsx";
 
 
 type MaintenanceType = {
@@ -9,20 +13,17 @@ type MaintenanceType = {
   name: string
 }
 
-type SelectedMaintenance = {
-  type: string
-  name: string
-  cost: string
-}
-
 interface AddMaintenanceModalProps {
   debounceRef: RefObject<number | null>
 }
 
 export const AddMaintenanceModal = ({ debounceRef } : AddMaintenanceModalProps) => {
-  const { car } = useAppContext();
+  const { car, setIsModalOpen } = useAppContext()
   const [query, setQuery] = useState("")
-  const [selected, setSelected] = useState<SelectedMaintenance[]>([])
+  const [selected, setSelected] = useState<Maintenance[]>([])
+  const match = useMatch("/car/:id")
+  const carId = match ? Number(match.params.id) : undefined
+  const addMaintenanceMutation = useAddMaintenance(carId)
 
   const maintenances = [
     { type: "oil", name: "Замена масла" },
@@ -44,10 +45,21 @@ export const AddMaintenanceModal = ({ debounceRef } : AddMaintenanceModalProps) 
   const addMaintenance = (item: MaintenanceType) => {
     setSelected(prev => [
       ...prev,
-      { ...item, cost: "" }
+      { ...item, cost: 0 }
     ])
     setQuery("")
   }
+
+  const [values, setValues] = useState({
+    mileage: 0,
+    comment: ""
+  });
+
+  const [errors, setErrors] = useState({
+    mileage: "",
+    comment: "",
+    types: ""
+  });
 
   const createMaintenance = () => {
     const type = query
@@ -58,21 +70,42 @@ export const AddMaintenanceModal = ({ debounceRef } : AddMaintenanceModalProps) 
       type,
       name: query
     })
+
+    setErrors((prev) => ({
+      ...prev,
+      ["types"]: ""
+    }))
   }
 
-  const [values, setValues] = useState({
-    mileage: "",
-    comment: ""
-  });
+  const validate = (name: string, value: string | number | Maintenance[]) => {
+    switch (name) {
+      case "mileage":
+        return (value && (Number(value) < 0))
+          ? "Пробег не может быть отрицательным"
+          : Number(value) === 0
+            ? "Введите пробег"
+            : ""
+      case "comment":
+        return (typeof value === "string" && value.trim().length === 0)
+          ? "Введите комментарий"
+          : ''
+      case "types":
+        return (typeof value === "object" && value.length === 0)
+          ? "Выберите хотя бы один тип"
+          : ''
+    }
+  }
 
-  const [errors, setErrors] = useState({
-    mileage: ""
-  });
+  const validateAll = () => {
+    const newErrors: typeof errors = {
+      mileage: validate("mileage", values.mileage) || "",
+      comment: validate("comment", values.comment) || "",
+      types: validate("types", selected) || "",
+    };
 
-  const validate = (name: string, value: string) => {
-    return (name === "mileage") && value && (Number(value) < 0)
-      ? "Пробег не может быть отрицательным"
-      : null
+    setErrors(newErrors);
+
+    return Object.values(newErrors).every((e) => !e);
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -109,6 +142,35 @@ export const AddMaintenanceModal = ({ debounceRef } : AddMaintenanceModalProps) 
     }
   }
 
+  const clickAddMaintenance = () => {
+    const isValid = validateAll();
+
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current)
+    }
+
+    if (!isValid) return
+
+    addMaintenanceMutation.mutate({
+      date: new Date().toISOString(),
+      mileage: values.mileage,
+      comment: values.comment,
+      items: selected
+    }, {
+      onSuccess: () => {
+        setValues({
+          mileage: 0,
+          comment: "",
+        })
+        setSelected([])
+        setIsModalOpen(false)
+      },
+      onError: (e) => {
+        console.error(e)
+      }
+    })
+  }
+
   return (
     <>
       <h3>Новое ТО</h3>
@@ -116,21 +178,23 @@ export const AddMaintenanceModal = ({ debounceRef } : AddMaintenanceModalProps) 
       <Input
         name="mileage"
         label="Пробег (км)*"
+        type={"number"}
         placeholder={car && car.current_mileage ? car.current_mileage.toString() : ''}
-        value={values.mileage}
+        value={values.mileage ? values.mileage : ""}
         onChange={handleChange}
         error={errors.mileage}
       />
 
       <Input
         name="comment"
-        label="Комментарий"
+        label="Комментарий*"
         value={values.comment}
         onChange={handleChange}
+        error={errors.comment}
       />
 
       <div className='input-wrapper'>
-        <div className='label'>Добавьте минимум одно ТО</div>
+        <div className='label'>Добавьте минимум одно ТО*</div>
         <div className="autocomplete">
 
           <Input
@@ -139,6 +203,7 @@ export const AddMaintenanceModal = ({ debounceRef } : AddMaintenanceModalProps) 
             placeholder="Введите тип ТО" name={"maintenance-add"}
             onKeyDown={handleKeyDown}
             autoComplete="off"
+            error={errors.types}
           />
 
           {query && (
@@ -163,7 +228,6 @@ export const AddMaintenanceModal = ({ debounceRef } : AddMaintenanceModalProps) 
         </div>
 
       </div>
-
       {selected.length > 0 && (
         <div className="maintenance-list">
           {selected.map((item, i) => (
@@ -173,10 +237,10 @@ export const AddMaintenanceModal = ({ debounceRef } : AddMaintenanceModalProps) 
                 name={item.name}
                 type="number"
                 label={item.name}
-                placeholder="Стоимость (₽)"
-                value={item.cost}
+                placeholder="Стоимость, ₽"
+                value={item.cost ? item.cost : ""}
                 onChange={(e) => {
-                  const cost = e.target.value
+                  const cost = +e.target.value
                   setSelected(prev =>
                     prev.map((m, index) =>
                       index === i ? {...m, cost} : m
@@ -196,7 +260,22 @@ export const AddMaintenanceModal = ({ debounceRef } : AddMaintenanceModalProps) 
         </div>
       )}
 
-      <Button label={"Добавить"} style={{ marginTop: "16px" }}/>
+      <Button
+        label={addMaintenanceMutation.isPending
+          ? <Loader />
+          : addMaintenanceMutation.error
+            ? "Произошла ошибка"
+            : "Добавить"
+        }
+        onClick={clickAddMaintenance}
+        style={{ marginTop: "16px" }}
+        className={ addMaintenanceMutation.isPending
+          ? "default-button active"
+          : addMaintenanceMutation.error
+            ? "default-button error"
+            : "default-button"
+        }
+      />
     </>
   );
 }

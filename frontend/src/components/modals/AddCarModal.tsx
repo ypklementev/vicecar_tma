@@ -15,6 +15,7 @@ const currentYear = new Date().getFullYear();
 
 export const AddCarModal = ({ debounceRef } : AddCarModalProps) => {
   const { setIsModalOpen } = useAppContext()
+  const addCarMutation = useAddCar()
 
   const [values, setValues] = useState<AddCar>({
     brand: "",
@@ -56,8 +57,6 @@ export const AddCarModal = ({ debounceRef } : AddCarModalProps) => {
 
     return "";
   }
-
-  const addCarMutation = useAddCar()
 
   const validateAll = () => {
     const newErrors: typeof errors = {
@@ -176,7 +175,13 @@ export const AddCarModal = ({ debounceRef } : AddCarModalProps) => {
       />
 
       <Button
-        label={addCarMutation.isPending ? <Loader /> : "Добавить"}
+        label={
+          addCarMutation.isPending
+            ? <Loader />
+            : addCarMutation.error
+              ? "Произошла ошибка"
+              : "Добавить"
+        }
         style={{ marginTop: "16px" }}
         onClick={clickAddCar}
         className={ addCarMutation.isPending

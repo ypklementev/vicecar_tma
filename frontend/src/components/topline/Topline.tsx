@@ -2,12 +2,14 @@ import { useEffect, useRef } from "react"
 import { useLocation, useMatch } from "react-router-dom"
 import gsap from "gsap"
 import { useAppContext } from "@/context/AppContext.tsx";
-import {ToplineName} from "@/components/topline/ui/ToplineName.tsx";
+import { ToplineName } from "@/components/topline/ui/ToplineName.tsx";
+import {useCarPage} from "@/hooks/useCarPage.tsx";
 
 
 export const Topline = () => {
   const location = useLocation()
-  const { cars, activePage, setActivePage, setCar } = useAppContext()
+  const { cars, setCar } = useAppContext()
+  const { activePage, setActivePage } = useCarPage()
   const underlineRef = useRef<HTMLDivElement>(null)
   const itemRefs = useRef<Record<string, HTMLDivElement>>({})
   const isCarPage = useMatch("/car/:id")

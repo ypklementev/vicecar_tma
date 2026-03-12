@@ -1,7 +1,7 @@
-import axios from "axios";
-import { initData } from "./telegram";
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import type {AddCar, Cars, CarsService, User} from "@/types/types.ts";
+import axios from "axios"
+import { initData } from "./telegram"
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query"
+import type {AddCar, Cars, Maintenances, RepairsApi, User} from "@/types/types.ts"
 
 
 const apiClient = axios.create({
@@ -13,7 +13,7 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use((config) => {
   if (initData) {
-    config.headers["X-Telegram-Init-Data"] = initData;
+    config.headers["X-Telegram-Init-Data"] = initData
   }
 
   return config;
@@ -23,15 +23,15 @@ async function api<T = unknown>(
   url: string,
   config?: any
 ): Promise<T> {
-  const res = await apiClient(url, config);
-  return res.data;
+  const res = await apiClient(url, config)
+  return res.data
 }
 
 export const useGetCars = () => {
   return useQuery<Cars>({
     queryKey: ["cars"],
     queryFn: () => api("/cars")
-  });
+  })
 }
 
 export const useGetUser = () => {
@@ -42,9 +42,17 @@ export const useGetUser = () => {
 }
 
 export const useGetMaintenance = (carId?: number) => {
-  return useQuery<CarsService>({
+  return useQuery<Maintenances[]>({
     queryKey: ["maintenance", carId],
     queryFn: () => api(`/maintenance/${carId}`),
+    enabled: !!carId
+  })
+}
+
+export const useGetRepairs = (carId?: number) => {
+  return useQuery<RepairsApi>({
+    queryKey: ["repairs", carId],
+    queryFn: () => api(`/repairs/${carId}`),
     enabled: !!carId
   })
 }
@@ -56,8 +64,21 @@ export const useAddCar = () => {
     mutationKey: ["addCar"],
     mutationFn: (car: AddCar) => api("/cars", { data: car, method: "POST" }),
 
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cars"] })
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({queryKey: ["cars"]})
+    }
+  })
+}
+
+export const useAddMaintenance = (carId?: number) => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: ["addMaintenance"],
+    mutationFn: (maintenance: Maintenances) => api(`/maintenance/${carId}`, { data: maintenance, method: "POST" }),
+
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({queryKey: ["maintenance"]})
     }
   })
 }

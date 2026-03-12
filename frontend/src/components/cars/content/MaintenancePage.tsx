@@ -1,16 +1,13 @@
 import {useGetMaintenance} from "@/api/api.ts";
 import { useMatch } from "react-router-dom"
 import {PageLoader} from "@/components/Loader.tsx";
+import {MaintenanceCard} from "@/shared/ui/MaintenanceCard.tsx";
 
 
 export const MaintenancePage = () => {
   const match = useMatch("/car/:id")
   const carId = match ? Number(match.params.id) : undefined
   const maintenance = useGetMaintenance(carId)
-
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString("ru-RU")
-  }
 
   if (maintenance.isLoading) {
     return <PageLoader />
@@ -21,19 +18,23 @@ export const MaintenancePage = () => {
   )
 
   return (
-    <div className="maintenance-container">
-      {maintenance.data && (maintenance.data.map((item) => (
-        <div
-          className='maintenance-item'
-          key={item.id}
-        >
-          <h3>{item.total_cost} ₽</h3>
-          {item.comment && <span className='comment'>{item.comment}</span>}
-          <div className='info'>
-            <span className='mileage'>{item.mileage} км</span>
-            <span className='date'>{formatDate(item.date)}</span>
-          </div>
-        </div>
+    <div className="maintenances-container">
+      {maintenance.data && (maintenance.data.map((items, index) => (
+        <MaintenanceCard maintenance={items} key={index} />
+        // <div
+        //   className='maintenance-item'
+        //   key={items.id}
+        // >
+        //   <div className={"mini-container"}>
+        //     <h3>{items.total_cost} ₽</h3>
+        //     <button onClick={() => {}} className={"card-menu-button"}/>
+        //   </div>
+        //   {items.comment && <span className='comment'>{items.comment}</span>}
+        //   <div className='mini-container'>
+        //     <span className='mileage'>{items.mileage} км</span>
+        //     <span className='date'>{formatDate(items.date)}</span>
+        //   </div>
+        // </div>
       )))}
     </div>
   )

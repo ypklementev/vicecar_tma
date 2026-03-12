@@ -17,6 +17,15 @@ html
   background-color: $background-color
   scroll-behavior: smooth
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button
+  -webkit-appearance: none
+  -moz-appearance: textfield
+  margin: 0
+
+input[type=number]
+  -moz-appearance: textfield
+
 body
   overflow-x: hidden
 
@@ -35,9 +44,13 @@ body
 
     &.page
       position: absolute
-      inset: 50% 25%
+      /* inset: 50%; */
       display: flex
-      transform: translate(-50%, -50%)
+      transform: translate(0, -100%)
+      justify-self: center
+      align-self: center
+      align-items: center
+      top: 50%
 
     .loader
       border-radius: 50%
@@ -118,18 +131,18 @@ body
       .back
         display: flex
         width: 1rem + $lg + $lg
-        height: 32px
+        height: 40px
         cursor: pointer
         padding: 0 $lg
         align-self: center
 
         &:after
           content: ''
-          background: url('@/assets/arrow-back.svg') no-repeat center center
-          background-size: 16px
+          background: url('@/assets/back-arrow.svg') no-repeat center center
+          background-size: 40px
           color: $text-color
-          width: 16px
-          height: 32px
+          width: 100%
+          height: 40px
 
     h1
       font-size: $font-xxxl
@@ -203,10 +216,12 @@ body
     display: flex
     width: 200vw
     height: 100%
+    overflow-y: hidden
 
     .page-content
       width: 100vw
       height: 100%
+      overflow-y: auto
 
   .page-content
     padding: 0 $xxl
@@ -251,28 +266,62 @@ body
           font-size: $font-sm
           color: color.adjust($text-color, $lightness: 30%)
 
-  .maintenance-container
-    display: flex
-    flex-direction: column
-    gap: $xl
+  .maintenances-container
+    @include container
 
-    .maintenance-item
-      display: flex
-      flex-direction: column
-      gap: $sm
-      padding: $xl $xxl
-      border-radius: $xl
-      background-color: $modal-background
-      @include card-shadow
+    .maintenances-item
+      @include container-item
 
       span
         font-size: $font-sm
         color: color.adjust($text-color, $lightness: 30%)
 
-      div.info
-        display: flex
-        flex-direction: row
-        justify-content: space-between
+    .maintenances-wrapper
+      display: flex
+      flex-direction: column
 
-      &.skeleton
-        @include skeleton(75px)
+      .maintenance-container
+        height: 0
+        overflow: hidden
+        display: flex
+        flex-direction: column
+        gap: $sm
+
+        .maintenance-item
+          display: flex
+          flex-direction: row
+          justify-content: space-between
+          &:first-child
+            margin-top: $xs
+            padding-top: $sm
+            border-top: 1px solid $border-color
+
+  .repairs-container
+    @include container
+
+    .repairs-item
+      @include container-item
+
+      & span
+        font-size: $font-sm
+        color: color.adjust($text-color, $lightness: 30%)
+
+    .repair-wrapper
+      display: flex
+      flex-direction: column
+
+      .repair-container
+        height: 0
+        overflow: hidden
+        display: flex
+        flex-direction: column
+        gap: $sm
+
+        .repair-item
+          display: flex
+          flex-direction: row
+          justify-content: space-between
+          &:first-child
+            margin-top: $xs
+            padding-top: $sm
+            border-top: 1px solid $border-color

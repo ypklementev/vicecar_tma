@@ -21,8 +21,8 @@ export interface AppContextProps {
   activeCar: number | undefined
   setActiveCar: (value: number) => void
 
-  activePage: "maintenance" | "service",
-  setActivePage: (value: "maintenance" | "service") => void
+  // activePage: "maintenance" | "service",
+  // setActivePage: (value: "maintenance" | "service") => void
 }
 
 export interface User {
@@ -64,4 +64,36 @@ export interface AddCar {
   "year": number,
   "vin": string,
   "current_mileage": number,
+}
+
+export interface Repair {
+  id: number,
+  name: string,
+  cost: string,
+  type: string,
+}
+
+export interface Repairs {
+  id: number,
+  car_id: number,
+  date: string,
+  mileage: number,
+  total_cost: number,
+  comment: string,
+  items: Repair[]
+}
+
+export type RepairsApi = Repairs[]
+
+export interface Maintenance {
+  type: string,
+  name: string,
+  cost: number
+}
+
+export interface Maintenances {
+  date: string,
+  mileage: number,
+  comment: string,
+  items: Maintenance[]
 }
