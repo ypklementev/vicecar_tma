@@ -184,6 +184,7 @@ export const AddCarModal = ({ debounceRef } : AddCarModalProps) => {
         }
         style={{ marginTop: "16px" }}
         onClick={clickAddCar}
+        disabled={ addCarMutation.isPending }
         className={ addCarMutation.isPending
             ? "default-button active"
             : addCarMutation.error

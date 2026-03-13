@@ -70,7 +70,7 @@ export const useAddCar = () => {
   })
 }
 
-export const useAddMaintenance = (carId?: number) => {
+export const useAddMaintenance = (carId: number | undefined) => {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -79,6 +79,19 @@ export const useAddMaintenance = (carId?: number) => {
 
     onSuccess: async () => {
       await queryClient.invalidateQueries({queryKey: ["maintenance"]})
+    }
+  })
+}
+
+export const useAddRepair = (carId: number | undefined) => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: ["addMaintenance"],
+    mutationFn: (repair: Maintenances) => api(`/repairs/${carId}`, { data: repair, method: "POST" }),
+
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({queryKey: ["repairs"]})
     }
   })
 }

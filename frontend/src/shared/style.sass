@@ -18,6 +18,9 @@
   cursor: pointer
   transition: background-color .1s ease
 
+  &[disabled]
+    cursor: not-allowed
+
   &.active
     background-color: color.adjust($text-color, $lightness: 30%)
 
