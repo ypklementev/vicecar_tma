@@ -26,6 +26,7 @@ export const AddServiceModal = ({ debounceRef } : AddServiceModalProps) => {
   const match = useMatch("/car/:id")
   const carId = match ? Number(match.params.id) : undefined
   const useMutation = activePage === 'maintenance' ? useAddMaintenance(carId) : useAddRepair(carId)
+  const [isFocused, setIsFocused] = useState(false)
 
   const maintenances = [
     { type: "oil", name: "Замена масла" },
@@ -75,9 +76,7 @@ export const AddServiceModal = ({ debounceRef } : AddServiceModalProps) => {
   });
 
   const createMaintenance = () => {
-    const type = query
-      .toLowerCase()
-      .replace(/\s+/g, "_")
+    const type = "other"
 
     addMaintenance({
       type,
@@ -222,9 +221,11 @@ export const AddServiceModal = ({ debounceRef } : AddServiceModalProps) => {
             onKeyDown={handleKeyDown}
             autoComplete="off"
             error={errors.types}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
           />
 
-          {query && (
+          {query && isFocused && (
             <div className="suggestions">
               {filtered.map(item => (
                 <span
@@ -235,11 +236,13 @@ export const AddServiceModal = ({ debounceRef } : AddServiceModalProps) => {
                 </span>
               ))}
 
-              {filtered.length === 0 && (
+              {filtered.length === 0 && (activePage === 'service' ? (
                 <span onClick={createMaintenance}>
-                  Создать "{query}"
+                  Другое
                 </span>
-              )}
+              ) : (
+                <span>Ничего не найдено</span>
+              ))}
             </div>
           )}
 
