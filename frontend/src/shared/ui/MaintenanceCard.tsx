@@ -10,7 +10,6 @@ interface Props {
 export const MaintenanceCard = ({ maintenance }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const arrowRef = useRef<HTMLButtonElement>(null)
-
   const [expanded, setExpanded] = useState(false)
 
   const formatDate = (date: string) => {

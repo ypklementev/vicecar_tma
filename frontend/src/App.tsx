@@ -17,11 +17,11 @@ function App() {
       <div className="app">
         <Topline />
         <ModalsManager />
+        <OpenModal />
         <Routes>
           <Route path="/" element={<CarsPage />} />
           <Route path="/car/:id" element={<CarInfoPage />} />
         </Routes>
-        <OpenModal />
       </div>
     </BrowserRouter>
   )

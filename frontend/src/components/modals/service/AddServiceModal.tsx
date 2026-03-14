@@ -1,12 +1,12 @@
-import React, {type ChangeEvent, type RefObject, useState} from "react"
+import React, {type ChangeEvent, type RefObject, useEffect, useState} from "react"
 import {Input} from "@/shared/ui/input.tsx"
 import {Button} from "@/shared/ui/button.tsx"
 import {useAppContext} from "@/context/AppContext.tsx"
-import type {Maintenance} from "@/types/types.ts";
-import {useAddMaintenance, useAddRepair} from "@/api/api.ts";
+import type {Maintenance, Maintenances} from "@/types/types.ts";
+import {useAddMaintenance, useAddRepair, useGetRepairs} from "@/api/api.ts";
 import {useMatch} from "react-router-dom";
-import {Loader} from "@/components/Loader.tsx";
-import {useCarPage} from "@/hooks/useCarPage.tsx";
+import {Loader} from "@/shared/ui/Loader.tsx";
+import type {UseMutationResult} from "@tanstack/react-query";
 
 
 type MaintenanceType = {
@@ -15,18 +15,19 @@ type MaintenanceType = {
 }
 
 interface AddServiceModalProps {
-  debounceRef: RefObject<number | null>
+  debounceRef: RefObject<ReturnType<typeof setTimeout> | null>
+  useMutation: UseMutationResult<unknown, Error, Maintenances, unknown>
 }
 
 export const AddServiceModal = ({ debounceRef } : AddServiceModalProps) => {
-  const { car, setIsModalOpen } = useAppContext()
-  const { activePage } = useCarPage()
+  const { car, setIsModalOpen, modal, menuId } = useAppContext()
   const [query, setQuery] = useState("")
   const [selected, setSelected] = useState<Maintenance[]>([])
   const match = useMatch("/car/:id")
   const carId = match ? Number(match.params.id) : undefined
-  const useMutation = activePage === 'maintenance' ? useAddMaintenance(carId) : useAddRepair(carId)
+  const useMutation = modal.type === 'addMaintenance' ? useAddMaintenance(carId) : useAddRepair(carId)
   const [isFocused, setIsFocused] = useState(false)
+  const getRepairs = useGetRepairs(carId)
 
   const maintenances = [
     { type: "oil", name: "Замена масла" },
@@ -52,7 +53,13 @@ export const AddServiceModal = ({ debounceRef } : AddServiceModalProps) => {
     { type: "body", name: "Кузовные работы" }
   ]
 
-  const filtered = (activePage === 'maintenance' ? maintenances : repairs).filter(m =>
+  const filtered = (
+    modal.type === 'addMaintenance'
+      ? maintenances
+      : modal.type === 'addService'
+        ? repairs
+        : repairs
+  ).filter(m =>
     m.name.toLowerCase().includes(query.toLowerCase())
   )
 
@@ -76,6 +83,7 @@ export const AddServiceModal = ({ debounceRef } : AddServiceModalProps) => {
   });
 
   const createMaintenance = () => {
+    if (modal.type === 'addMaintenance') return
     const type = "other"
 
     addMaintenance({
@@ -183,12 +191,32 @@ export const AddServiceModal = ({ debounceRef } : AddServiceModalProps) => {
     })
   }
 
+  useEffect(() => {
+    if (modal.type !== 'editRepair') return
+    const data = getRepairs.data?.find((item) => (item.id === menuId))
+    if (data) {
+      setValues({
+        mileage: data.mileage,
+        comment: data.comment
+      })
+      const parsedItems = data.items.map(item => ({
+        type: item.type,
+        name: item.name,
+        cost: Number(item.cost)  // конвертируем string → number
+      }))
+
+      setSelected(parsedItems)
+    }
+  }, [getRepairs.data, menuId]);
+
   return (
     <>
       <h3>
-        {activePage === 'maintenance'
+        {modal.type === 'addMaintenance'
           ? 'Новое ТО'
-          : 'Новый ремонт'
+          : modal.type === 'addService'
+            ? 'Новый ремонт'
+            : 'Редактировать ремонт'
         }
       </h3>
 
@@ -236,7 +264,7 @@ export const AddServiceModal = ({ debounceRef } : AddServiceModalProps) => {
                 </span>
               ))}
 
-              {filtered.length === 0 && (activePage === 'service' ? (
+              {filtered.length === 0 && (modal.type === 'addService' ? (
                 <span onClick={createMaintenance}>
                   Другое
                 </span>
@@ -299,5 +327,5 @@ export const AddServiceModal = ({ debounceRef } : AddServiceModalProps) => {
         }
       />
     </>
-  );
+  )
 }

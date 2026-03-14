@@ -1,6 +1,6 @@
 import {useGetMaintenance} from "@/api/api.ts";
 import { useMatch } from "react-router-dom"
-import {PageLoader} from "@/components/Loader.tsx";
+import {PageLoader} from "@/shared/ui/Loader.tsx";
 import {MaintenanceCard} from "@/shared/ui/MaintenanceCard.tsx";
 
 

@@ -60,6 +60,7 @@ $height: var(--tg-viewport-height, 100vh)
   box-shadow: 0 $xs $lg rgba($text-color, 0.05)
 
 @mixin container-item
+  position: relative
   display: flex
   flex-direction: column
   gap: $md
@@ -105,6 +106,7 @@ $height: var(--tg-viewport-height, 100vh)
     display: flex
     flex-direction: row
     justify-content: space-between
+    position: relative
 
   @include card-shadow
 

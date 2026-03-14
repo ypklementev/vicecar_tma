@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, type ReactNode } from 'react';
-import type {AppContextProps, Car} from "@/types/types.ts";
+import type {AppContextProps, Car, ModalState} from "@/types/types.ts";
 import { useGetCars, useGetUser } from "@/api/api.ts";
 
 
@@ -15,30 +15,46 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [ addModalOpen, setAddModalOpen ] = useState<boolean>(false)
   const [ isBtnLoading, setIsBtnLoading ] = useState<boolean>(false)
   const [ activeCar, setActiveCar ] = useState<number>(0)
-  // const [activePage, setActivePage] = useState<"maintenance" | "service">("maintenance")
   const [car, setCar] = useState<Car | null>(null)
+  const [isEditing, setIsEditing] = useState<{ open: boolean, id: number | null }>({open: false, id: null})
+  const [menuId, setMenuId] = useState<number | null>(null)
+  const [modal, setModal] = useState<ModalState>({type: null})
+
   const user = useGetUser()
   const cars = useGetCars()
 
   return (
     <AppContext.Provider
       value={{
-        theme,
-        setTheme,
-        isLoading,
-        setIsLoading,
+        theme: theme,
+        setTheme: setTheme,
+
+        isLoading: isLoading,
+        setIsLoading: setIsLoading,
+
         isModalOpen: addModalOpen,
         setIsModalOpen: setAddModalOpen,
-        isBtnLoading,
-        setIsBtnLoading,
-        activeCar,
-        setActiveCar,
+
+        isBtnLoading: isBtnLoading,
+        setIsBtnLoading: setIsBtnLoading,
+
+        activeCar: activeCar,
+        setActiveCar: setActiveCar,
+
+        car: car,
+        setCar: setCar,
+
+        menuId: menuId,
+        setMenuId: setMenuId,
+
+        isEditing: isEditing,
+        setIsEditing: setIsEditing,
+
+        modal: modal,
+        setModal: setModal,
+
         user,
         cars,
-        car,
-        setCar,
-        // activePage,
-        // setActivePage,
       }}
     >
       {children}

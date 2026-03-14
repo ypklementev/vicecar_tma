@@ -92,6 +92,7 @@ body
     align-items: center
     justify-content: center
     border-radius: 50%
+    z-index: 3
 
   h3
     font-size: $font-lg
@@ -196,7 +197,7 @@ body
     justify-content: center
     pointer-events: none
     z-index: 11
-    transform: translateY(100vh)
+    transform: translateY($height)
     align-self: end
 
   .modal-content
@@ -237,6 +238,8 @@ body
       grid-template-columns: repeat(auto-fill, minmax(160px, 2fr))
       grid-template-rows: min-content
       gap: $xl
+      overflow-y: auto
+      padding-bottom: 80px
 
       .car-card
         display: flex

@@ -1,14 +1,14 @@
 import { Input } from "@/shared/ui/input.tsx";
 import {type ChangeEvent, type RefObject, useState} from "react";
 import {Button} from "@/shared/ui/button.tsx";
-import {Loader} from "@/components/Loader.tsx";
+import {Loader} from "@/shared/ui/Loader.tsx";
 import {useAddCar} from "@/api/api.ts";
 import type {AddCar} from "@/types/types.ts";
 import {useAppContext} from "@/context/AppContext.tsx";
 
 
 interface AddCarModalProps {
-  debounceRef: RefObject<number | null>
+  debounceRef: RefObject<ReturnType<typeof setTimeout> | null>
 }
 
 const currentYear = new Date().getFullYear();

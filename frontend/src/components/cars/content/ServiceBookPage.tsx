@@ -1,6 +1,6 @@
 import { useMatch } from "react-router-dom"
 import { useGetRepairs } from "@/api/api"
-import { PageLoader } from "@/components/Loader"
+import { PageLoader } from "@/shared/ui/Loader.tsx"
 import { RepairCard } from "@/shared/ui/RepairCard.tsx";
 
 

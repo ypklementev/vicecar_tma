@@ -1,6 +1,8 @@
-import { useRef, useState } from "react"
+import {useRef, useState} from "react"
 import gsap from "gsap"
 import type {Repairs} from "@/types/types.ts";
+import {useAppContext} from "@/context/AppContext.tsx";
+import {DotsModal} from "@/shared/ui/dotsmodal.tsx";
 
 
 interface Props {
@@ -10,8 +12,9 @@ interface Props {
 export const RepairCard = ({ repair }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const arrowRef = useRef<HTMLButtonElement>(null)
-
+  const { setMenuId, menuId } = useAppContext()
   const [expanded, setExpanded] = useState(false)
+  const isOpen = menuId === repair.id
 
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString("ru-RU")
@@ -58,10 +61,16 @@ export const RepairCard = ({ repair }: Props) => {
   }
 
   return (
-    <div className="repairs-item">
+    <div className="repairs-item" key={repair.id}>
       <div className="mini-container">
         <h3>{repair.comment}</h3>
-        <button className="card-menu-button" />
+        <button
+          className="card-menu-button"
+          onClick={(e) => {
+            e.stopPropagation()
+            setMenuId(isOpen ? null : repair.id)
+          }}
+        />
       </div>
 
       <span>{repair.mileage} км</span>
@@ -90,6 +99,8 @@ export const RepairCard = ({ repair }: Props) => {
           onClick={toggle}
         />
       </div>
+
+      {isOpen && <DotsModal itemId={repair.id} />}
     </div>
   )
 }

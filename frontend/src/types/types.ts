@@ -1,28 +1,54 @@
 import type {UseQueryResult} from "@tanstack/react-query";
+import React, {type SetStateAction} from "react";
+
+
+type isEditing = {
+  open: boolean
+  id: number | null
+}
+
+export type ModalType =
+  | "addCar"
+  | "addService"
+  | "addMaintenance"
+  | "editRepair"
+  | null
+
+export type ModalState = {
+  type: ModalType
+  data?: any
+}
 
 export interface AppContextProps {
   theme: 'light' | 'dark'
-  setTheme: (theme: 'light' | 'dark') => void
+  setTheme: React.Dispatch<React.SetStateAction<'light' | 'dark'>>
 
   isLoading: boolean
-  setIsLoading: (value: boolean) => void
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
 
   isModalOpen: boolean
-  setIsModalOpen: (value: boolean) => void
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
 
   isBtnLoading: boolean
-  setIsBtnLoading: (value: boolean) => void
+  setIsBtnLoading: React.Dispatch<React.SetStateAction<boolean>>
 
   user: UseQueryResult<User, Error>
   cars: UseQueryResult<Cars, Error>
+
   car: Car | null
-  setCar: (value: Car | null) => void
+  setCar: React.Dispatch<React.SetStateAction<Car | null>>
 
-  activeCar: number | undefined
-  setActiveCar: (value: number) => void
+  activeCar: number | null
+  setActiveCar: React.Dispatch<React.SetStateAction<number>>
 
-  // activePage: "maintenance" | "service",
-  // setActivePage: (value: "maintenance" | "service") => void
+  isEditing: isEditing
+  setIsEditing: React.Dispatch<React.SetStateAction<isEditing>>
+
+  menuId: number | null
+  setMenuId: React.Dispatch<SetStateAction<number | null>>
+
+  modal: ModalState
+  setModal: React.Dispatch<React.SetStateAction<ModalState>>
 }
 
 export interface User {
@@ -69,7 +95,7 @@ export interface AddCar {
 export interface Repair {
   id: number,
   name: string,
-  cost: string,
+  cost: number,
   type: string,
 }
 
