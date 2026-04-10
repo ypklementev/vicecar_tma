@@ -1,4 +1,3 @@
-// import {useAppContext} from "@/context/AppContext.tsx"
 import {useEffect, useRef} from "react"
 import {MaintenancePage} from "@/components/cars/content/MaintenancePage.tsx"
 import {ServiceBookPage} from "@/components/cars/content/ServiceBookPage.tsx"

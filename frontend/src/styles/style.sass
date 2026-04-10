@@ -93,6 +93,15 @@ body
     justify-content: center
     border-radius: 50%
     z-index: 3
+    outline: none
+    border: none
+
+    &:after
+      content: ""
+      background: url('@/assets/plus.svg') no-repeat center center
+      background-size: 2rem
+      width: 2rem
+      height: 2rem
 
   h3
     font-size: $font-lg
@@ -140,8 +149,8 @@ body
 
         &:after
           content: ''
-          background: url('@/assets/back-arrow.svg') no-repeat center center
-          background-size: 40px
+          background: url('@/assets/arrow-back.svg') no-repeat center center
+          background-size: 1rem
           color: $text-color
           width: 100%
           height: 40px
@@ -233,7 +242,7 @@ body
       text-align: center
       pointer-events: none
 
-    &.cars
+    .cars
       display: grid
       grid-template-columns: repeat(auto-fill, minmax(160px, 2fr))
       grid-template-rows: min-content
