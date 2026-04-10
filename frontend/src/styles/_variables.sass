@@ -1,0 +1,121 @@
+@use 'sass:color'
+
+
+$background-color: #f4f5f7
+$text-color: #171717
+$border-color: #d8d8d8
+$modal-background: #fff
+$error-color: #f5222f
+
+
+// sizing
+$xs: .125rem
+$sm: .25rem
+$md: .375rem
+$lg: .5rem
+$xl: .75rem
+$xxl: 1rem
+$xxxl: 1.5rem
+$xxxxl: 2rem
+
+// font-sizes
+$font-xs: .75rem
+$font-sm: .875rem
+$font-md: 1rem
+$font-lg: 1.125rem
+$font-xl: 1.25rem
+$font-xxl: 1.375rem
+$font-xxxl: 1.5rem
+
+// Telegram safe-area
+$safe-top: var(--tg-safe-area-inset-top, 0px)
+$safe-bottom: var(--tg-safe-area-inset-bottom, 0px)
+$safe-left: var(--tg-safe-area-inset-left, 0px)
+$safe-right: var(--tg-safe-area-inset-right, 0px)
+
+$height: var(--tg-viewport-height, 100vh)
+
+@mixin skeleton($height: $xxl, $radius: $lg, $width: 100%)
+  display: block
+  position: relative
+  overflow: hidden
+  height: $height
+  width: $width
+  border-radius: $radius
+  background: color.adjust($background-color, $blackness: 5%)
+
+  &::after
+    content: ""
+    position: absolute
+    inset: 0
+    transform: translateX(-100%)
+    background: linear-gradient(90deg, transparent, rgba($text-color, 0.05), transparent)
+    animation: skeleton-loading 1.4s infinite
+
+  @keyframes skeleton-loading
+    100%
+      transform: translateX(100%)
+
+@mixin card-shadow
+  box-shadow: 0 $xs $lg rgba($text-color, 0.05)
+
+@mixin container-item
+  position: relative
+  display: flex
+  flex-direction: column
+  gap: $md
+  padding: $xl $xxl
+  border-radius: $xl
+  background-color: $modal-background
+
+  .card-menu-button
+    height: $font-lg
+    width: $font-lg
+    border: none
+    background-color: transparent
+    border-radius: 50%
+    cursor: pointer
+    &:after
+      content: ""
+      display: inline
+      width: 100%
+      height: 100%
+      background: url('@/assets/menu-dots.svg') no-repeat center center
+      background-size: $font-lg $font-lg
+      padding: $md $xl
+
+  .expand-button
+    height: $font-xl
+    width: 100%
+    border: none
+    background-color: transparent
+    border-radius: 50%
+    cursor: pointer
+    display: flex
+    margin: 0 auto
+
+    &:after
+      content: ""
+      display: block
+      width: 100%
+      height: 100%
+      background: url('@/assets/down-arrow.svg') no-repeat center center
+      background-size: $font-xl $font-xl
+
+  div.mini-container
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    position: relative
+
+  @include card-shadow
+
+  // НА ДАННЫЙ МОМЕНТ НЕ ИСПОЛЬЗУЕТСЯ
+  //&.skeleton
+  //  @include skeleton(75px)
+
+@mixin container
+  padding-bottom: 80px
+  display: flex
+  flex-direction: column
+  gap: $xl
