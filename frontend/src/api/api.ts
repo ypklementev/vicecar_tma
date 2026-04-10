@@ -12,6 +12,7 @@ const apiClient = axios.create({
 })
 
 apiClient.interceptors.request.use((config) => {
+
   if (initData) {
     config.headers["X-Telegram-Init-Data"] = initData
   }
@@ -41,7 +42,7 @@ export const useGetUser = () => {
   });
 }
 
-export const useGetMaintenance = (carId?: number) => {
+export const useGetMaintenance = (carId?: number | undefined) => {
   return useQuery<Maintenances[]>({
     queryKey: ["maintenance", carId],
     queryFn: () => api(`/maintenance/${carId}`),

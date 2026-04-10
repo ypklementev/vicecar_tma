@@ -14,9 +14,15 @@ export type ModalType =
   | "editRepair"
   | null
 
-export type ModalState = {
-  type: ModalType
-  data?: any
+export interface ModalState {
+  type: ModalType | null
+  props?: Record<string, unknown>
+}
+
+export interface ModalButtonConfig {
+  label?: string
+  modalType: ModalType
+  modalProps?: Record<string, unknown>
 }
 
 export interface AppContextProps {
