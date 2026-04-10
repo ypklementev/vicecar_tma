@@ -27,9 +27,7 @@ export function Modal({ children }: { children: ReactNode }) {
         <>
             <div ref={overlayRef} className="overlay" onClick={handleClose} />
             <div className="modal" ref={modalRef}>
-                <div className="modal-content">
-                    {children}
-                </div>
+                {children}
             </div>
         </>
     )

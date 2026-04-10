@@ -15,35 +15,29 @@ export const Input = ({ label, name, error, ...rest }: InputProps) => {
 
     if (error) {
       gsap.fromTo(
-        errorRef.current,
-        { opacity: 0, y: -6 },
-        { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" }
+          errorRef.current,
+          { opacity: 0, y: -6 },
+          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" }
       );
     } else {
-      gsap.to(errorRef.current, {
-        opacity: 0,
-        y: -6,
-        duration: 0.2
-      });
+      gsap.to(errorRef.current, { opacity: 0, y: -6, duration: 0.2 });
     }
   }, [error]);
 
   return (
-    <div className="input-wrapper">
-      <div className="label">{label}</div>
-
-      <input
-        name={name}
-        {...rest}
-        className={`custom-input ${error ? "error" : ""}`}
-        autoComplete="off"
-      />
-
-      {error && (
-        <span className="input-error" ref={errorRef}>
+      <div className="input-wrapper">
+        <div className="label">{label}</div>
+        <input
+            name={name}
+            {...rest}
+            className={`custom-input ${error ? "error" : ""}`}
+            autoComplete="off"
+        />
+        {error && (
+            <span className="input-error" ref={errorRef}>
           {error}
         </span>
-      )}
-    </div>
+        )}
+      </div>
   );
 };

@@ -64,18 +64,23 @@ export interface User {
   username: string
 }
 
-export interface Car {
+export interface CarApi {
   brand: string,
-  created_at: string,
+  model: string,
+  year: number,
+  vin?: string | null,
   current_mileage: number,
+}
+
+export interface Car extends CarApi{
+  created_at: string,
   id: number
   last_oil_notification_mileage: number | null,
-  model: string,
   oil_change_interval_km: number | null,
   user_id: number
-  vin: string | null
-  year: number
 }
+
+
 
 export type Cars = Car[]
 
@@ -89,14 +94,6 @@ export interface CarService {
 }
 
 export type CarsService = CarService[]
-
-export interface AddCar {
-  "brand": string,
-  "model": string,
-  "year": number,
-  "vin": string,
-  "current_mileage": number,
-}
 
 export interface Repair {
   id: number,

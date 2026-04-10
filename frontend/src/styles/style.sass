@@ -209,18 +209,18 @@ body
     transform: translateY($height)
     align-self: end
 
-  .modal-content
-    background: $modal-background
-    width: 100%
-    border-radius: $xxxl $xxxl 0 0
-    padding: $xxl $xxl calc($xxl + $safe-bottom) $xxl
-    pointer-events: auto
-    display: flex
-    flex-direction: column
-    gap: $xxl
-    height: 100%
-    overflow-y: auto
-    max-height: 80vh
+    .modal-content
+      background: $modal-background
+      width: 100%
+      border-radius: $xxxl $xxxl 0 0
+      padding: $xxl $xxl calc($xxl + $safe-bottom) $xxl
+      pointer-events: auto
+      display: flex
+      flex-direction: column
+      gap: $xxl
+      height: 100%
+      overflow-y: auto
+      max-height: 80vh
 
   .content-wrapper
     display: flex
@@ -235,6 +235,7 @@ body
 
   .page-content
     padding: 0 $xxl
+    overflow-y: auto
 
     .empty-page
       color: color.adjust($text-color, $lightness: 30%)

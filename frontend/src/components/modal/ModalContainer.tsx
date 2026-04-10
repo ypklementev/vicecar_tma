@@ -1,13 +1,11 @@
 import { useModal } from '@/context/ModalContext'
 import { Modal } from './Modal'
-import React, { lazy, Suspense } from 'react'
+import React, { lazy } from 'react'
 
 const MODAL_CONTENT: Record<string, React.LazyExoticComponent<any>> = {
     addCar:         lazy(() => import('./modals/AddCarContent')),
     addMaintenance: lazy(() => import('./modals/AddMaintenance')),
     addService: lazy(() => import('./modals/AddService')),
-    // confirmDelete: lazy(() => import('./modals/ConfirmDeleteContent')),
-    // editUser:      lazy(() => import('./modals/EditUserContent')),
 }
 
 export function ModalContainer() {
@@ -17,9 +15,7 @@ export function ModalContainer() {
 
     return (
         <Modal>
-            <Suspense fallback={null}>
-                {Content && <Content {...(modal.props ?? {})} />}
-            </Suspense>
+            {Content && <Content {...(modal.props ?? {})} />}
         </Modal>
     )
 }
