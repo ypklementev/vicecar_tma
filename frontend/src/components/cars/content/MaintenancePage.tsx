@@ -1,19 +1,12 @@
 import {useGetMaintenance} from "@/api/api.ts";
 import {PageLoader} from "@/shared/ui/Loader.tsx";
 import {MaintenanceCard} from "@/shared/ui/MaintenanceCard.tsx";
-import {useModalButton} from "@/hooks/useModalButton.tsx";
 import {useCarId} from "@/hooks/useCarId.tsx";
 
 
 export const MaintenancePage = () => {
   const carId = useCarId();
   const maintenance = useGetMaintenance(carId)
-
-  useModalButton({
-    label: '+ Обслуживание',
-    modalType: 'addMaintenance',
-    modalProps: { carId },
-  })
 
   if (maintenance.isLoading) {
     return <PageLoader />

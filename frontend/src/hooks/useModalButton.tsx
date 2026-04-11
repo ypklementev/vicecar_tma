@@ -7,6 +7,6 @@ export function useModalButton(config: ModalButtonConfig | null) {
 
     useEffect(() => {
         setButtonConfig(config)
-        return () => setButtonConfig(null)  // сбрасываем при уходе со страницы
-    }, [])
+        return () => setButtonConfig(null)
+    }, [config?.modalType])
 }

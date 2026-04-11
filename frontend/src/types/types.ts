@@ -32,9 +32,6 @@ export interface AppContextProps {
   isLoading: boolean
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
 
-  isModalOpen: boolean
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
-
   isBtnLoading: boolean
   setIsBtnLoading: React.Dispatch<React.SetStateAction<boolean>>
 
@@ -124,5 +121,5 @@ export interface Maintenances {
   date: string,
   mileage: number,
   comment: string,
-  items: Maintenance[]
+  items: Maintenance[] | null
 }

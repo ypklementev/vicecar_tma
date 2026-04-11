@@ -16,12 +16,34 @@
   background-color: $text-color
   color: $background-color
   cursor: pointer
-  transition: background-color .1s ease
+  transition: all .1s ease
+
+  .success
+    display: flex
+    flex-direction: row
+    align-items: center
+    gap: $md
+    color: #fff
+
+    span
+      width: 1.2rem
+      height: 1.2rem
+
+      &:after
+        content: ""
+        background: url("@/assets/success.svg") no-repeat center center
+        display: flex
+        background-size: 1.2rem 1.2rem
+        width: 1.2rem
+        height: 1.2rem
 
   &[disabled]
     cursor: not-allowed
     background-color: color.adjust($text-color, $lightness: 30%)
     color: $background-color
+
+    &.btn-success
+      background-color: color.adjust($success-color, $lightness: 10%)
 
   &.active
     background-color: color.adjust($text-color, $lightness: 30%)

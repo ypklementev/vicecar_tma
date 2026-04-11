@@ -18,7 +18,7 @@ export const CarsPage = () => {
   const navigate = useNavigate()
 
   useModalButton({
-    label: '+ Обслуживание',
+    label: 'Добавить авто',
     modalType: 'addCar',
   })
 

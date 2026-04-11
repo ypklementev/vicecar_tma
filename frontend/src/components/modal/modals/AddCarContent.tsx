@@ -4,6 +4,7 @@ import { Button, Input, Loader } from "@/shared/ui";
 import { useAddCar } from "@/api/api.ts";
 import type { CarApi } from "@/types/types.ts";
 import {useModal} from "@/context/ModalContext.tsx";
+import {Success} from "@/shared/ui/Success.tsx";
 
 interface CarFormValues {
     brand: string;
@@ -47,7 +48,7 @@ export default function AddCarContent() {
 
         addCar.mutate(payload, {
             onSuccess: () => {
-                closeModal();
+                setTimeout(() => closeModal(), 500)
             },
         });
     };
@@ -110,10 +111,16 @@ export default function AddCarContent() {
 
             <Button
                 name="addCar"
-                label={addCar.isPending ? <Loader /> : "Добавить"}
-                disabled={addCar.isPending}
+                label={addCar.isPending
+                    ? <Loader />
+                    : addCar.isSuccess
+                        ? <Success />
+                        : "Добавить"
+                }
+                disabled={addCar.isPending || addCar.isSuccess}
+                customClass={addCar.isSuccess ? "btn-success" : ''}
                 type="submit"
-                style={{marginTop: "1rem"}}
+                style={{ marginTop: "1rem" }}
             />
         </form>
     );

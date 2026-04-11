@@ -5,7 +5,7 @@ import React, { lazy } from 'react'
 const MODAL_CONTENT: Record<string, React.LazyExoticComponent<any>> = {
     addCar:         lazy(() => import('./modals/AddCarContent')),
     addMaintenance: lazy(() => import('./modals/AddMaintenance')),
-    addService: lazy(() => import('./modals/AddService')),
+    addService:     lazy(() => import('./modals/AddService')),
 }
 
 export function ModalContainer() {

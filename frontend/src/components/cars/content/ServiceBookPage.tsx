@@ -1,19 +1,12 @@
 import { useGetRepairs } from "@/api/api"
 import { PageLoader } from "@/shared/ui/Loader.tsx"
 import { RepairCard } from "@/shared/ui/RepairCard.tsx";
-import {useModalButton} from "@/hooks/useModalButton.tsx";
 import {useCarId} from "@/hooks/useCarId.tsx";
 
 
 export const ServiceBookPage = () => {
   const carId = useCarId();
   const repairs = useGetRepairs(carId)
-
-  useModalButton({
-    label: '+ Обслуживание',
-    modalType: 'addService',
-    modalProps: { carId },
-  })
 
   if (repairs.isLoading) {
     return <PageLoader />

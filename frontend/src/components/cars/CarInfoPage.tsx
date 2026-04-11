@@ -3,10 +3,15 @@ import {MaintenancePage} from "@/components/cars/content/MaintenancePage.tsx"
 import {ServiceBookPage} from "@/components/cars/content/ServiceBookPage.tsx"
 import gsap from "gsap"
 import {useCarPage} from "@/hooks/useCarPage.tsx";
+import {useModalButton} from "@/hooks/useModalButton.tsx";
 
 
 export const CarInfoPage = () => {
   const { activePage } = useCarPage()
+
+  useModalButton({
+    modalType: activePage === "maintenance" ? "addMaintenance" : "addService"
+  })
 
   const contentRef = useRef<HTMLDivElement>(null)
 
