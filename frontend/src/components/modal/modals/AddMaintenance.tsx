@@ -1,7 +1,6 @@
 import {useAddMaintenance} from "@/api/api.ts";
 import {useModal} from "@/context/ModalContext.tsx";
 import {useForm} from "react-hook-form";
-import {useEffect} from "react";
 import type {Maintenances} from "@/types/types.ts";
 import {Button, Input, Loader} from "@/shared/ui";
 import {Success} from "@/shared/ui/Success.tsx";
@@ -18,19 +17,12 @@ export default function AddMaintenance () {
     const {
         register,
         handleSubmit,
-        trigger,
-        formState,
+        formState: { errors },
     } = useForm<Maintenances>({
         mode: "onChange",
+        delayError: 500,
         defaultValues: {mileage: car?.current_mileage}
     });
-
-    const { errors, touchedFields } = formState;
-
-    useEffect(() => {
-        const fields = Object.keys(touchedFields) as (keyof Maintenances)[];
-        if (fields.length > 0) trigger(fields);
-    }, [trigger]);
 
     const onSubmit = (data: Maintenances) => {
         const payload: Maintenances = {
@@ -55,7 +47,6 @@ export default function AddMaintenance () {
                 label="Комментарий"
                 placeholder="..."
                 type="text"
-                error={errors.comment?.message}
                 name={"comment"}
             />
 
@@ -67,13 +58,6 @@ export default function AddMaintenance () {
                 {...register("mileage", {
                     required: "Укажите пробег",
                 })}
-            />
-
-            <Input
-                label="ВИН-номер"
-                placeholder="ВИН-номер"
-                type="text"
-                name={"vin"}
             />
 
             <Button

@@ -1,4 +1,3 @@
-import {useEffect} from "react";
 import { useForm } from "react-hook-form";
 import { Button, Input, Loader } from "@/shared/ui";
 import { useAddCar } from "@/api/api.ts";
@@ -24,19 +23,13 @@ export default function AddCarContent() {
     const {
         register,
         handleSubmit,
-        trigger,
-        formState,
+        formState: { errors },
+        clearErrors,
     } = useForm<CarFormValues>({
         mode: "onChange",
+        delayError: 500,
         defaultValues: { vin: "" },
     });
-
-    const { errors, touchedFields } = formState;
-
-    useEffect(() => {
-        const fields = Object.keys(touchedFields) as (keyof CarFormValues)[];
-        if (fields.length > 0) trigger(fields);
-    }, [trigger]);
 
     const onSubmit = (data: CarFormValues) => {
         const payload: CarApi = {
@@ -62,6 +55,7 @@ export default function AddCarContent() {
                 placeholder="Toyota"
                 type="text"
                 error={errors.brand?.message}
+                onInput={() => clearErrors('brand')}
                 {...register("brand", {
                     required: "Укажите марку",
                 })}
@@ -72,6 +66,7 @@ export default function AddCarContent() {
                 placeholder="Camry"
                 type="text"
                 error={errors.model?.message}
+                onInput={() => clearErrors('model')}
                 {...register("model", {
                     required: "Укажите модель",
                 })}
@@ -82,6 +77,7 @@ export default function AddCarContent() {
                 placeholder={String(CURRENT_YEAR)}
                 type="number"
                 error={errors.year?.message}
+                onInput={() => clearErrors('year')}
                 {...register("year", {
                     valueAsNumber: true,
                     required: "Укажите год",
@@ -102,6 +98,7 @@ export default function AddCarContent() {
                 placeholder="0"
                 type="number"
                 error={errors.current_mileage?.message}
+                onInput={() => clearErrors('current_mileage')}
                 {...register("current_mileage", {
                     valueAsNumber: true,
                     required: "Укажите пробег",
