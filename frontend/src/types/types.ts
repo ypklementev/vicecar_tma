@@ -14,9 +14,15 @@ export type ModalType =
   | "editRepair"
   | null
 
-export type ModalState = {
-  type: ModalType
-  data?: any
+export interface ModalState {
+  type: ModalType | null
+  props?: Record<string, unknown>
+}
+
+export interface ModalButtonConfig {
+  label?: string
+  modalType: ModalType
+  modalProps?: Record<string, unknown>
 }
 
 export interface AppContextProps {
@@ -25,9 +31,6 @@ export interface AppContextProps {
 
   isLoading: boolean
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
-
-  isModalOpen: boolean
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
 
   isBtnLoading: boolean
   setIsBtnLoading: React.Dispatch<React.SetStateAction<boolean>>
@@ -58,18 +61,23 @@ export interface User {
   username: string
 }
 
-export interface Car {
+export interface CarApi {
   brand: string,
-  created_at: string,
+  model: string,
+  year: number,
+  vin?: string | null,
   current_mileage: number,
+}
+
+export interface Car extends CarApi{
+  created_at: string,
   id: number
   last_oil_notification_mileage: number | null,
-  model: string,
   oil_change_interval_km: number | null,
   user_id: number
-  vin: string | null
-  year: number
 }
+
+
 
 export type Cars = Car[]
 
@@ -83,14 +91,6 @@ export interface CarService {
 }
 
 export type CarsService = CarService[]
-
-export interface AddCar {
-  "brand": string,
-  "model": string,
-  "year": number,
-  "vin": string,
-  "current_mileage": number,
-}
 
 export interface Repair {
   id: number,
@@ -121,5 +121,5 @@ export interface Maintenances {
   date: string,
   mileage: number,
   comment: string,
-  items: Maintenance[]
+  items: Maintenance[] | null
 }

@@ -1,7 +1,7 @@
 import axios from "axios"
 import { initData } from "./telegram"
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query"
-import type {AddCar, Cars, Maintenances, RepairsApi, User} from "@/types/types.ts"
+import type { CarApi, Cars, Maintenances, RepairsApi, User } from "@/types/types.ts"
 
 
 const apiClient = axios.create({
@@ -12,6 +12,7 @@ const apiClient = axios.create({
 })
 
 apiClient.interceptors.request.use((config) => {
+
   if (initData) {
     config.headers["X-Telegram-Init-Data"] = initData
   }
@@ -41,7 +42,7 @@ export const useGetUser = () => {
   });
 }
 
-export const useGetMaintenance = (carId?: number) => {
+export const useGetMaintenance = (carId?: number | undefined) => {
   return useQuery<Maintenances[]>({
     queryKey: ["maintenance", carId],
     queryFn: () => api(`/maintenance/${carId}`),
@@ -62,7 +63,7 @@ export const useAddCar = () => {
 
   return useMutation({
     mutationKey: ["addCar"],
-    mutationFn: (car: AddCar) => api("/cars", { data: car, method: "POST" }),
+    mutationFn: (car: CarApi) => api("/cars", { data: car, method: "POST" }),
 
     onSuccess: async () => {
       await queryClient.invalidateQueries({queryKey: ["cars"]})

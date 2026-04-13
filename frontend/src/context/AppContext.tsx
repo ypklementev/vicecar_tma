@@ -12,13 +12,12 @@ interface AppProviderProps {
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [ theme, setTheme ] = useState<'light' | 'dark'>('light')
   const [ isLoading, setIsLoading ] = useState<boolean>(false)
-  const [ addModalOpen, setAddModalOpen ] = useState<boolean>(false)
   const [ isBtnLoading, setIsBtnLoading ] = useState<boolean>(false)
   const [ activeCar, setActiveCar ] = useState<number>(0)
-  const [car, setCar] = useState<Car | null>(null)
-  const [isEditing, setIsEditing] = useState<{ open: boolean, id: number | null }>({open: false, id: null})
-  const [menuId, setMenuId] = useState<number | null>(null)
-  const [modal, setModal] = useState<ModalState>({type: null})
+  const [ car, setCar ] = useState<Car | null>(null)
+  const [ isEditing, setIsEditing ] = useState<{ open: boolean, id: number | null }>({open: false, id: null})
+  const [ menuId, setMenuId ] = useState<number | null>(null)
+  const [ modal, setModal ] = useState<ModalState>({type: null})
 
   const user = useGetUser()
   const cars = useGetCars()
@@ -31,9 +30,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
         isLoading: isLoading,
         setIsLoading: setIsLoading,
-
-        isModalOpen: addModalOpen,
-        setIsModalOpen: setAddModalOpen,
 
         isBtnLoading: isBtnLoading,
         setIsBtnLoading: setIsBtnLoading,
