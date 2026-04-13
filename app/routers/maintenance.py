@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session, selectinload
-from datetime import datetime
-from pydantic import BaseModel
+
 from app.database import get_db
-from app.models import MaintenanceItem, MaintenanceRecord, Car, User
+from app.models import Car, ServiceRecord, ServiceItem, ServiceType, User
 from app.auth import get_current_user
-from app.schemas import MaintenanceCreate, MaintenanceRecordResponse
+from app.schemas import ServiceCreate, ServiceRecordResponse
+from app.utils import recalc_service_total
 
 router = APIRouter(
     prefix="/maintenance",
@@ -13,10 +13,10 @@ router = APIRouter(
 )
 
 
-@router.post("/{car_id}")
+@router.post("/{car_id}", response_model=ServiceRecordResponse)
 def create_maintenance(
     car_id: int,
-    data: MaintenanceCreate,
+    data: ServiceCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -28,39 +28,41 @@ def create_maintenance(
     if not car:
         raise HTTPException(status_code=404, detail="Car not found")
 
+    if not data.items:
+        raise HTTPException(status_code=400, detail="Maintenance must contain at least one item")
+
     total_cost = sum(item.cost or 0 for item in data.items)
 
-    maintenance = MaintenanceRecord(
+    record = ServiceRecord(
         car_id=car.id,
+        service_type=ServiceType.MAINTENANCE,
         date=data.date,
         mileage=data.mileage,
         total_cost=total_cost,
         comment=data.comment
     )
 
-    db.add(maintenance)
-    db.flush()  # получаем maintenance.id
+    db.add(record)
+    db.flush()
 
     for item in data.items:
-        db.add(
-            MaintenanceItem(
-                maintenance_id=maintenance.id,
-                type=item.type,
-                name=item.name,
-                cost=item.cost
-            )
-        )
+        db.add(ServiceItem(
+            record_id=record.id,
+            type=item.type,
+            name=item.name,
+            cost=item.cost
+        ))
 
     if data.mileage > car.current_mileage:
         car.current_mileage = data.mileage
 
     db.commit()
-    db.refresh(maintenance)
+    db.refresh(record)
 
-    return maintenance
+    return record
 
 
-@router.get("/{car_id}", response_model=list[MaintenanceRecordResponse])
+@router.get("/{car_id}", response_model=list[ServiceRecordResponse])
 def get_maintenance_history(
     car_id: int,
     db: Session = Depends(get_db),
@@ -74,12 +76,13 @@ def get_maintenance_history(
     if not car:
         raise HTTPException(status_code=404, detail="Car not found")
 
-    records = (
-        db.query(MaintenanceRecord)
-        .options(selectinload(MaintenanceRecord.items))
-        .filter(MaintenanceRecord.car_id == car.id)
-        .order_by(MaintenanceRecord.date.desc())
+    return (
+        db.query(ServiceRecord)
+        .options(selectinload(ServiceRecord.items))
+        .filter(
+            ServiceRecord.car_id == car.id,
+            ServiceRecord.service_type == ServiceType.MAINTENANCE
+        )
+        .order_by(ServiceRecord.date.desc())
         .all()
     )
-
-    return records

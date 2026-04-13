@@ -1,7 +1,13 @@
-from sqlalchemy import String, Integer, ForeignKey, Boolean, Date, Numeric
+from sqlalchemy import String, Integer, ForeignKey, Boolean, Date, Numeric, Enum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 from app.database import Base
+import enum
+
+
+class ServiceType(str, enum.Enum):
+    MAINTENANCE = "maintenance"
+    REPAIR = "repair"
 
 
 class User(Base):
@@ -31,66 +37,44 @@ class Car(Base):
     last_oil_notification_mileage: Mapped[int | None] = mapped_column(nullable=True)
 
     user: Mapped["User"] = relationship(back_populates="cars")
-    maintenances: Mapped[list["MaintenanceRecord"]
-                         ] = relationship(back_populates="car")
-    repairs: Mapped[list["RepairRecord"]] = relationship(back_populates="car")
+    service_records: Mapped[list["ServiceRecord"]] = relationship(back_populates="car")
+
+    @property
+    def maintenances(self):
+        return [r for r in self.service_records if r.service_type == ServiceType.MAINTENANCE]
+
+    @property
+    def repairs(self):
+        return [r for r in self.service_records if r.service_type == ServiceType.REPAIR]
 
 
-class MaintenanceRecord(Base):
-    __tablename__ = "maintenance_records"
+class ServiceRecord(Base):
+    __tablename__ = "service_records"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     car_id: Mapped[int] = mapped_column(ForeignKey("cars.id"))
+    service_type: Mapped[ServiceType] = mapped_column(
+        Enum(ServiceType), nullable=False, index=True
+    )
     date: Mapped[datetime]
     mileage: Mapped[int]
     total_cost: Mapped[float]
     comment: Mapped[str | None]
 
-    car: Mapped["Car"] = relationship(back_populates="maintenances")
-    items: Mapped[list["MaintenanceItem"]] = relationship(
-        back_populates="maintenance",
+    car: Mapped["Car"] = relationship(back_populates="service_records")
+    items: Mapped[list["ServiceItem"]] = relationship(
+        back_populates="record",
         cascade="all, delete-orphan"
     )
 
 
-class MaintenanceItem(Base):
-    __tablename__ = "maintenance_items"
+class ServiceItem(Base):
+    __tablename__ = "service_items"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    maintenance_id: Mapped[int] = mapped_column(ForeignKey("maintenance_records.id"))
-
-    type: Mapped[str | None] = mapped_column(nullable=True)
+    record_id: Mapped[int] = mapped_column(ForeignKey("service_records.id"))
     name: Mapped[str]
+    type: Mapped[str | None] = mapped_column(nullable=True)
     cost: Mapped[float | None]
 
-    maintenance: Mapped["MaintenanceRecord"] = relationship(back_populates="items")
-
-
-class RepairRecord(Base):
-    __tablename__ = "repair_records"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    car_id: Mapped[int] = mapped_column(ForeignKey("cars.id"))
-    date: Mapped[datetime]
-    mileage: Mapped[int]
-    total_cost: Mapped[float]
-    comment: Mapped[str | None]
-
-    car: Mapped["Car"] = relationship(back_populates="repairs")
-    items: Mapped[list["RepairItem"]] = relationship(
-        back_populates="repair",
-        cascade="all, delete-orphan"
-    )
-
-
-class RepairItem(Base):
-    __tablename__ = "repair_items"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    repair_id: Mapped[int] = mapped_column(ForeignKey("repair_records.id"))
-
-    name: Mapped[str]
-    type: Mapped[str | None]
-    cost: Mapped[float]
-
-    repair: Mapped["RepairRecord"] = relationship(back_populates="items")
+    record: Mapped["ServiceRecord"] = relationship(back_populates="items")

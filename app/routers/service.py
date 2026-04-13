@@ -1,20 +1,27 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session, selectinload
+from typing import Optional
 
 from app.database import get_db
 from app.models import Car, ServiceRecord, ServiceItem, ServiceType, User
 from app.auth import get_current_user
-from app.schemas import ServiceCreate, ServiceUpdate, ServiceItemCreate, ServiceItemUpdate, ServiceRecordResponse
+from app.schemas import (
+    ServiceCreate,
+    ServiceUpdate,
+    ServiceItemCreate,
+    ServiceItemUpdate,
+    ServiceRecordResponse,
+)
 from app.utils import recalc_service_total, apply_service_update
 
 router = APIRouter(
-    prefix="/repairs",
-    tags=["Repairs"]
+    prefix="/service",
+    tags=["Service"]
 )
 
 
 @router.post("/{car_id}", response_model=ServiceRecordResponse)
-def create_repair(
+def create_service_record(
     car_id: int,
     data: ServiceCreate,
     db: Session = Depends(get_db),
@@ -29,13 +36,13 @@ def create_repair(
         raise HTTPException(status_code=404, detail="Car not found")
 
     if not data.items:
-        raise HTTPException(status_code=400, detail="Repair must contain at least one item")
+        raise HTTPException(status_code=400, detail="Service record must contain at least one item")
 
     total_cost = sum(item.cost or 0 for item in data.items)
 
     record = ServiceRecord(
         car_id=car.id,
-        service_type=ServiceType.REPAIR,
+        service_type=data.service_type,
         date=data.date,
         mileage=data.mileage,
         total_cost=total_cost,
@@ -63,8 +70,9 @@ def create_repair(
 
 
 @router.get("/{car_id}", response_model=list[ServiceRecordResponse])
-def get_repairs(
+def get_service_history(
     car_id: int,
+    service_type: Optional[ServiceType] = Query(default=None),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -76,21 +84,21 @@ def get_repairs(
     if not car:
         raise HTTPException(status_code=404, detail="Car not found")
 
-    return (
+    query = (
         db.query(ServiceRecord)
         .options(selectinload(ServiceRecord.items))
-        .filter(
-            ServiceRecord.car_id == car.id,
-            ServiceRecord.service_type == ServiceType.REPAIR
-        )
-        .order_by(ServiceRecord.date.desc())
-        .all()
+        .filter(ServiceRecord.car_id == car.id)
     )
 
+    if service_type:
+        query = query.filter(ServiceRecord.service_type == service_type)
 
-@router.patch("/{repair_id}", response_model=ServiceRecordResponse)
-def edit_repair(
-    repair_id: int,
+    return query.order_by(ServiceRecord.date.desc()).all()
+
+
+@router.patch("/{record_id}", response_model=ServiceRecordResponse)
+def edit_service_record(
+    record_id: int,
     data: ServiceUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -99,15 +107,14 @@ def edit_repair(
         db.query(ServiceRecord)
         .join(Car)
         .filter(
-            ServiceRecord.id == repair_id,
-            ServiceRecord.service_type == ServiceType.REPAIR,
+            ServiceRecord.id == record_id,
             Car.user_id == current_user.id
         )
         .first()
     )
 
     if not record:
-        raise HTTPException(status_code=404, detail="Repair not found")
+        raise HTTPException(status_code=404, detail="Service record not found")
 
     apply_service_update(db, record, data)
 
@@ -117,9 +124,9 @@ def edit_repair(
     return record
 
 
-@router.post("/{repair_id}/items")
-def add_repair_item(
-    repair_id: int,
+@router.post("/{record_id}/items")
+def add_service_item(
+    record_id: int,
     data: ServiceItemCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -128,15 +135,14 @@ def add_repair_item(
         db.query(ServiceRecord)
         .join(Car)
         .filter(
-            ServiceRecord.id == repair_id,
-            ServiceRecord.service_type == ServiceType.REPAIR,
+            ServiceRecord.id == record_id,
             Car.user_id == current_user.id
         )
         .first()
     )
 
     if not record:
-        raise HTTPException(status_code=404, detail="Repair not found")
+        raise HTTPException(status_code=404, detail="Service record not found")
 
     item = ServiceItem(
         record_id=record.id,
@@ -157,7 +163,7 @@ def add_repair_item(
 
 
 @router.patch("/items/{item_id}")
-def edit_repair_item(
+def edit_service_item(
     item_id: int,
     data: ServiceItemUpdate,
     db: Session = Depends(get_db),
@@ -169,7 +175,6 @@ def edit_repair_item(
         .join(Car)
         .filter(
             ServiceItem.id == item_id,
-            ServiceRecord.service_type == ServiceType.REPAIR,
             Car.user_id == current_user.id
         )
         .first()
@@ -189,7 +194,7 @@ def edit_repair_item(
 
 
 @router.delete("/items/{item_id}")
-def delete_repair_item(
+def delete_service_item(
     item_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
@@ -200,7 +205,6 @@ def delete_repair_item(
         .join(Car)
         .filter(
             ServiceItem.id == item_id,
-            ServiceRecord.service_type == ServiceType.REPAIR,
             Car.user_id == current_user.id
         )
         .first()
