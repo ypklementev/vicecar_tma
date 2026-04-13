@@ -1,54 +1,67 @@
-Vicecar
-Vicecar --- Telegram Mini App для учета обслуживания автомобилей. Приложение позволяет хранить информацию о машинах, проводить учет технического обслуживания и ремонтов, а также получать уведомления о необходимости замены масла.
+# Vicecar
 
-Backend написан на FastAPI, база данных --- PostgreSQL. Приложение интегрируется с Telegram Mini App через проверку initData.
+Vicecar --- Telegram Mini App для учета обслуживания автомобилей.
+Приложение позволяет хранить информацию о машинах, проводить учет
+технического обслуживания и ремонтов, а также получать уведомления о
+необходимости замены масла.
 
-Функциональность
-учет автомобилей пользователя
-журнал технического обслуживания (ТО)
-сервисная книга (ремонты)
-хранение пробега
-расчет необходимости замены масла
-уведомления через Telegram
-авторизация через Telegram WebApp
-Стек технологий
-Python
-FastAPI
-SQLAlchemy
-PostgreSQL
-Alembic
-APScheduler
-Nginx
-Telegram WebApp API
-Требования
-Python 3.11+
-PostgreSQL
-Telegram Bot Token
-Установка
-1. Клонировать репозиторий
-   git clone https://github.com/ypklementev/vicecar_tma.git cd vicecar_tma
+Backend написан на FastAPI, база данных --- PostgreSQL. Приложение
+интегрируется с Telegram Mini App через проверку initData.
 
-2. Создать виртуальное окружение
-   python -m venv .venv source .venv/bin/activate
+## Функциональность
 
-3. Установить зависимости
-   pip install -r requirements.txt
+-   учет автомобилей пользователя
+-   журнал технического обслуживания (ТО)
+-   сервисная книга (ремонты)
+-   хранение пробега
+-   расчет необходимости замены масла
+-   уведомления через Telegram
+-   авторизация через Telegram WebApp
 
-<h3>Запуск фронта:</h2>
+## Стек технологий
 
-1. <code>cd frontend</code>
-2. <code>yarn</code>
-3. <code>yarn run dev</code>
+-   Python
+-   FastAPI
+-   SQLAlchemy
+-   PostgreSQL
+-   Alembic
+-   APScheduler
+-   Nginx
+-   Telegram WebApp API
 
-Настройка
-Создать файл .env в корне проекта:
+## Требования
 
-DATABASE_URL=postgresql://user:password@localhost:5432/vicecar BOT_TOKEN=your_telegram_bot_token DEV_MODE=true
+-   Python 3.11+
+-   PostgreSQL
+-   Telegram Bot Token
 
-Миграции базы данных
+## Установка
+
+### 1. Клонировать репозиторий
+
+git clone https://github.com/ypklementev/vicecar_tma.git cd vicecar_tma
+
+### 2. Создать виртуальное окружение
+
+python -m venv .venv source .venv/bin/activate
+
+### 3. Установить зависимости
+
+pip install -r requirements.txt
+
+## Настройка
+
+Создать файл `.env` в корне проекта:
+
+DATABASE_URL=postgresql://user:password@localhost:5432/vicecar
+BOT_TOKEN=your_telegram_bot_token DEV_MODE=true
+
+## Миграции базы данных
+
 alembic upgrade head
 
-Запуск приложения
+## Запуск приложения
+
 Локальный запуск:
 
 uvicorn app.main:app --reload
@@ -57,22 +70,28 @@ uvicorn app.main:app --reload
 
 http://localhost:8000
 
-Запуск планировщика
-Планировщик используется для проверки необходимости замены масла. Он запускается автоматически при старте приложения.
+## Запуск планировщика
 
-Деплой
+Планировщик используется для проверки необходимости замены масла. Он
+запускается автоматически при старте приложения.
+
+## Деплой
+
 На сервере используется:
 
-systemd для запуска uvicorn
-nginx как reverse proxy
-GitHub Actions для автоматического деплоя
+-   systemd для запуска uvicorn
+-   nginx как reverse proxy
+-   GitHub Actions для автоматического деплоя
+
 После push в ветку main выполняется:
 
-обновление кода
-установка зависимостей
-выполнение миграций
-перезапуск сервиса
-Авторизация
+1.  обновление кода
+2.  установка зависимостей
+3.  выполнение миграций
+4.  перезапуск сервиса
+
+## Авторизация
+
 Авторизация происходит через Telegram Mini App.
 
 Frontend отправляет Telegram.WebApp.initData в заголовке:
