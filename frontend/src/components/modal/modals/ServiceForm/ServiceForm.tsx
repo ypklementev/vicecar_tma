@@ -1,7 +1,7 @@
 import { FormProvider } from "react-hook-form"
 import { Button, Input, Loader } from "@/shared/ui"
 import { Success } from "@/shared/ui/Success.tsx"
-import { SelectItems } from "@/components/modal/modals/components/SelectItems.tsx"
+import { SelectItems } from "@/components/modal/modals/ServiceForm/components/SelectItems.tsx"
 import { useServiceForm } from "./hooks/useServiceForm.ts"
 import { useAddMaintenanceHandler } from "./handlers/useAddMaintenanceHandler.ts"
 import { useAddRepairHandler } from "./handlers/useAddRepairHandler.ts"

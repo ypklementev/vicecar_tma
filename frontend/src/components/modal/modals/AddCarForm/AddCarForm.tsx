@@ -17,7 +17,7 @@ interface CarFormValues {
 const CURRENT_YEAR = new Date().getFullYear();
 const MIN_YEAR = 1900;
 
-export default function AddCarContent() {
+export const AddCarForm = () => {
     const addCar = useAddCar();
     const { closeModal } = useModal();
 

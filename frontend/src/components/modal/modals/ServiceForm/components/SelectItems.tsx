@@ -4,6 +4,7 @@ import { Input } from "@/shared/ui"
 import { SelectInput } from "@/shared/ui/SelectInput.tsx"
 import { MAINTENANCE_CATEGORIES, REPAIR_CATEGORIES } from "@/components/staticConsts.ts"
 
+
 interface SelectItemsProps {
     mode: "maintenance" | "repair"
 }
