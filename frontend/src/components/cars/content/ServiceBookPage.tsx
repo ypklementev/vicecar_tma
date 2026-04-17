@@ -1,7 +1,7 @@
 import { useGetRepairs } from "@/api/api"
 import { PageLoader } from "@/shared/ui/Loader.tsx"
 import { RepairCard } from "@/shared/ui/RepairCard.tsx";
-import {useCarId} from "@/hooks/useCarId.tsx";
+import {useCarId} from "@/shared/hooks/useCarId.tsx";
 
 
 export const ServiceBookPage = () => {

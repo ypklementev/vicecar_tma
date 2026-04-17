@@ -3,7 +3,7 @@ import { useLocation, useMatch } from "react-router-dom"
 import gsap from "gsap"
 import { useAppContext } from "@/context/AppContext.tsx";
 import { ToplineName } from "@/components/topline/ui/ToplineName.tsx";
-import {useCarPage} from "@/hooks/useCarPage.tsx";
+import {useCarPage} from "@/shared/hooks/useCarPage.tsx";
 
 
 export const Topline = () => {

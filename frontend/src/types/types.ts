@@ -8,11 +8,15 @@ type isEditing = {
 }
 
 export type ModalType =
-  | "addCar"
-  | "addService"
-  | "addMaintenance"
-  | "editRepair"
-  | null
+    | "addCar"
+    | "addService"
+    | "addMaintenance"
+    | "addRepair"
+    | "editMaintenance"
+    | "editRepair"
+    | null
+
+export type ServiceFormMode = "addMaintenance" | "addRepair" | "editMaintenance" | "editRepair"
 
 export interface ModalState {
   type: ModalType | null
@@ -117,8 +121,9 @@ export interface Maintenance {
 
 export interface Maintenances {
   service_type: "maintenance" | "repair",
+  id: number
   date: Date,
   mileage: number,
   comment: string,
-  items: Maintenance[] | null
+  items: Maintenance[]
 }

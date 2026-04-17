@@ -1,7 +1,7 @@
 import {useGetMaintenance} from "@/api/api.ts";
 import {PageLoader} from "@/shared/ui/Loader.tsx";
 import {MaintenanceCard} from "@/shared/ui/MaintenanceCard.tsx";
-import {useCarId} from "@/hooks/useCarId.tsx";
+import {useCarId} from "@/shared/hooks/useCarId.tsx";
 
 
 export const MaintenancePage = () => {

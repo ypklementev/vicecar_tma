@@ -3,14 +3,15 @@ import { Modal } from './Modal'
 import React, { lazy } from 'react'
 
 const MODAL_CONTENT: Record<string, React.LazyExoticComponent<any>> = {
-    addCar:         lazy(() => import('./modals/AddCarContent')),
-    addMaintenance: lazy(() => import('./modals/AddMaintenance')),
-    addService:     lazy(() => import('./modals/AddService')),
+    addCar:          lazy(() => import('./modals/AddCarContent')),
+    addMaintenance:  lazy(() => import('./modals/ServiceForm')),
+    addRepair:       lazy(() => import('./modals/ServiceForm')),
+    editMaintenance: lazy(() => import('./modals/ServiceForm')),
+    editRepair:      lazy(() => import('./modals/ServiceForm')),
 }
 
 export function ModalContainer() {
     const { modal } = useModal()
-
     const Content = modal.type ? MODAL_CONTENT[modal.type] : null
 
     return (

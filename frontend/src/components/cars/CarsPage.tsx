@@ -1,6 +1,6 @@
 import {useAppContext} from "@/context/AppContext.tsx";
 import {useNavigate} from "react-router-dom"
-import {useModalButton} from "@/hooks/useModalButton.tsx";
+import {useModalButton} from "@/shared/hooks/useModalButton.tsx";
 
 
 const LoadingCars = () => {

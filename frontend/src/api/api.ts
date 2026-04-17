@@ -75,8 +75,8 @@ export const useAddMaintenance = (carId: number | undefined) => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationKey: ["addMaintenance"],
-    mutationFn: (maintenance: Maintenances) => api(`/maintenance/${carId}`, { data: maintenance, method: "POST" }),
+    mutationKey: ["addMaintenance", carId],
+    mutationFn: (maintenance: Omit<Maintenances, 'id'>) => api(`/maintenance/${carId}`, { data: maintenance, method: "POST" }),
 
     onSuccess: async () => {
       await queryClient.invalidateQueries({queryKey: ["maintenance"]})
@@ -88,8 +88,8 @@ export const useAddRepair = (carId: number | undefined) => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationKey: ["addMaintenance"],
-    mutationFn: (repair: Maintenances) => api(`/repairs/${carId}`, { data: repair, method: "POST" }),
+    mutationKey: ["addRepair", carId],
+    mutationFn: (repair: Omit<Maintenances, 'id'>) => api(`/repairs/${carId}`, { data: repair, method: "POST" }),
 
     onSuccess: async () => {
       await queryClient.invalidateQueries({queryKey: ["repairs"]})
