@@ -90,8 +90,6 @@ export interface CarService {
   comment: string
 }
 
-export type CarsService = CarService[]
-
 export interface Repair {
   id: number,
   name: string,
@@ -113,12 +111,13 @@ export type RepairsApi = Repairs[]
 
 export interface Maintenance {
   type: string,
-  name: string,
-  cost: number
+  name: string | undefined,
+  cost: number | undefined
 }
 
 export interface Maintenances {
-  date: string,
+  service_type: "maintenance" | "repair",
+  date: Date,
   mileage: number,
   comment: string,
   items: Maintenance[] | null

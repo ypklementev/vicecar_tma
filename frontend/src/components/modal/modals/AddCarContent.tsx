@@ -5,6 +5,7 @@ import type { CarApi } from "@/types/types.ts";
 import {useModal} from "@/context/ModalContext.tsx";
 import {Success} from "@/shared/ui/Success.tsx";
 
+
 interface CarFormValues {
     brand: string;
     model: string;
@@ -36,12 +37,13 @@ export default function AddCarContent() {
             brand: data.brand,
             model: data.model,
             year: Number(data.year),
+            vin: data.vin,
             current_mileage: Number(data.current_mileage),
         };
 
         addCar.mutate(payload, {
             onSuccess: () => {
-                setTimeout(() => closeModal(), 500)
+                setTimeout(() => closeModal(), 750)
             },
         });
     };
