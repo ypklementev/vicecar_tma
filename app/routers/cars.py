@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models import Car, MaintenanceRecord, RepairRecord
+from app.models import Car, ServiceRecord, User
 from app.auth import get_current_user
-from app.models import User
 from app.schemas import CarCreate
 from app.services.oil import calculate_oil_status
 
 router = APIRouter(prefix="/cars", tags=["Cars"])
+
 
 @router.get("/")
 def get_my_cars(
@@ -66,34 +66,20 @@ def get_service_book(
     if not car:
         raise HTTPException(status_code=404, detail="Car not found")
 
-    maintenances = db.query(MaintenanceRecord).filter(
-        MaintenanceRecord.car_id == car.id
-    ).all()
+    records = (
+        db.query(ServiceRecord)
+        .filter(ServiceRecord.car_id == car.id)
+        .order_by(ServiceRecord.date.desc())
+        .all()
+    )
 
-    repairs = db.query(RepairRecord).filter(
-        RepairRecord.car_id == car.id
-    ).all()
-
-    combined = []
-
-    for m in maintenances:
-        combined.append({
-            "type": "maintenance",
-            "id": m.id,
-            "date": m.date,
-            "mileage": m.mileage,
-            "total_cost": m.total_cost
-        })
-
-    for r in repairs:
-        combined.append({
-            "type": "repair",
+    return [
+        {
+            "type": r.service_type.value,
             "id": r.id,
             "date": r.date,
             "mileage": r.mileage,
-            "total_cost": r.total_cost
-        })
-
-    combined.sort(key=lambda x: x["date"], reverse=True)
-
-    return combined
+            "total_cost": r.total_cost,
+        }
+        for r in records
+    ]

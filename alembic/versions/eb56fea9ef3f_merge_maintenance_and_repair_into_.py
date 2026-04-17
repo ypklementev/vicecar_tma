@@ -42,6 +42,16 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['record_id'], ['service_records.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.drop_constraint(
+
+        'repair_items_repair_id_fkey',  # constraint name from error
+
+        'repair_items',
+
+        type_='foreignkey'
+
+    )
+
     op.drop_table('repair_records')
     op.drop_table('maintenance_items')
     op.drop_table('repair_items')

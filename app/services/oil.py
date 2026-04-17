@@ -1,16 +1,18 @@
 from sqlalchemy.orm import Session
-from app.models import MaintenanceItem, MaintenanceRecord, Car
+
+from app.models import ServiceItem, ServiceRecord, ServiceType, Car
 
 
 def get_last_oil_change(car: Car, db: Session):
     return (
-        db.query(MaintenanceRecord)
-        .join(MaintenanceItem)
+        db.query(ServiceRecord)
+        .join(ServiceItem)
         .filter(
-            MaintenanceRecord.car_id == car.id,
-            MaintenanceItem.type == "oil"
+            ServiceRecord.car_id == car.id,
+            ServiceRecord.service_type == ServiceType.MAINTENANCE,
+            ServiceItem.type == "oil"
         )
-        .order_by(MaintenanceRecord.mileage.desc())
+        .order_by(ServiceRecord.mileage.desc())
         .first()
     )
 
@@ -41,5 +43,3 @@ def calculate_oil_status(car: Car, db: Session):
         "current_mileage": car.current_mileage,
         "remaining_km": remaining_km
     }
-
-
