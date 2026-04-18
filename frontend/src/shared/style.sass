@@ -87,6 +87,9 @@
     transition: background-color .2s ease
     width: 100%
 
+    &[data-empty="true"]
+      color: color.adjust($text-color, $lightness: 30%)
+
     &:focus
       background-color: $modal-background
 

@@ -279,61 +279,32 @@ body
           font-size: $font-sm
           color: color.adjust($text-color, $lightness: 30%)
 
-  .maintenances-container
+  .services-container
     @include container
 
-    .maintenances-item
-      @include container-item
-
-      span
-        font-size: $font-sm
-        color: color.adjust($text-color, $lightness: 30%)
-
-    .maintenances-wrapper
-      display: flex
-      flex-direction: column
-
-      .maintenance-container
-        height: 0
-        overflow: hidden
-        display: flex
-        flex-direction: column
-        gap: $sm
-
-        .maintenance-item
-          display: flex
-          flex-direction: row
-          justify-content: space-between
-          &:first-child
-            margin-top: $xs
-            padding-top: $sm
-            border-top: 1px solid $border-color
-
-  .repairs-container
-    @include container
-
-    .repairs-item
+    .services-item
       @include container-item
 
       & span
         font-size: $font-sm
         color: color.adjust($text-color, $lightness: 30%)
 
-    .repair-wrapper
+    .services-wrapper
       display: flex
       flex-direction: column
 
-      .repair-container
+      .service-container
         height: 0
         overflow: hidden
         display: flex
         flex-direction: column
         gap: $sm
 
-        .repair-item
+        .service-item
           display: flex
           flex-direction: row
           justify-content: space-between
+
           &:first-child
             margin-top: $xs
             padding-top: $sm

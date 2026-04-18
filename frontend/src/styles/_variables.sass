@@ -109,6 +109,11 @@ $height: var(--tg-viewport-height, 100vh)
     justify-content: space-between
     position: relative
 
+    span.empty-name
+      font-size: 1rem
+      font-style: italic
+      color: color.adjust($text-color, $lightness: 30%)
+
   @include card-shadow
 
   // НА ДАННЫЙ МОМЕНТ НЕ ИСПОЛЬЗУЕТСЯ
