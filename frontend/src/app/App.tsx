@@ -6,7 +6,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {Topline} from "@/modules/topline/Topline.tsx";
 import {CarsPage} from "@/modules/cars/CarsPage.tsx";
 import {CarInfoPage} from "@/modules/cars/CarInfoPage.tsx";
-import {ModalContainer} from "@/modules/modal/ModalContainer.tsx";
+import {ModalContainer} from "@/modules/modal/modals/ModalContainer.tsx";
 
 
 const AppModalButton = () => {

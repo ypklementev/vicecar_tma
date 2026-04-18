@@ -74,7 +74,7 @@ export const DotsModal = ({itemId, defaultValues, type}: DotsModalProps) => {
             <button
                 className="dots-button edit"
                 onClick={() => {
-                    openModal(type, { mode: type, id: itemId, defaultValues: defaultValues, type: "edit" })  // ← передаём id
+                    openModal(type, { mode: type, id: itemId, defaultValues: defaultValues, type: "edit" })
                     close()
                 }}
             >
@@ -83,7 +83,9 @@ export const DotsModal = ({itemId, defaultValues, type}: DotsModalProps) => {
 
             <button
                 className="dots-button delete"
-                onClick={close}
+                onClick={() => {
+                    close()
+                }}
             >
                 Удалить
             </button>

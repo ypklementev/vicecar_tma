@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from "react"
 import gsap from "gsap"
 import {useAppContext} from "@/app/context/AppContext.tsx";
-import {DotsModal} from "@/shared/ui/dotsmodal.tsx";
+import {DotsModal} from "@/widgets/DotsModal.tsx";
 import {useFormatDate} from "@/shared/hooks/useFormatDate.ts";
 import type {Service} from "@/shared/types/types.ts";
 
