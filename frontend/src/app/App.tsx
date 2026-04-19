@@ -7,6 +7,8 @@ import {Topline} from "@/modules/topline/Topline.tsx";
 import {CarsPage} from "@/modules/cars/CarsPage.tsx";
 import {CarInfoPage} from "@/modules/cars/CarInfoPage.tsx";
 import {ModalContainer} from "@/modules/modal/modals/ModalContainer.tsx";
+import {AlertsProvider} from "@/modules/alert/context/AlertsContext.tsx";
+import {AlertsContainer} from "@/modules/alert/alerts/AlertsContainer.tsx";
 
 
 const AppModalButton = () => {
@@ -30,12 +32,14 @@ function App() {
         <BrowserRouter>
             <div className="app">
                 <ModalProvider>
-                    <Topline/>
-                    <AppModalButton/>
-                    <Routes>
-                        <Route path="/" element={<CarsPage/>}/>
-                        <Route path="/car/:id" element={<CarInfoPage/>}/>
-                    </Routes>
+                    <AlertsProvider>
+                        <Topline/>
+                        <Routes>
+                            <Route path="/" element={<CarsPage/>}/>
+                            <Route path="/car/:id" element={<CarInfoPage/>}/>
+                        </Routes>
+                        <AlertsContainer />
+                    </AlertsProvider>
                     <ModalContainer/>
                     <AppModalButton/>
                 </ModalProvider>

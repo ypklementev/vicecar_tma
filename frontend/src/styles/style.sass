@@ -222,6 +222,44 @@ body
       overflow-y: auto
       max-height: 80vh
 
+  .alert
+    z-index: 10
+    display: flex
+    position: fixed
+    width: clamp(200px, 90vw, 500px)
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    background-color: $background-color
+    padding: $xl $xxxl
+    border-radius: $xl
+
+    .alert-content
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+      gap: $xxl
+      width: 100%
+
+      .alert-info
+        display: flex
+        flex-direction: column
+        align-items: center
+        justify-content: center
+        gap: $sm
+
+        span
+          font-size: 0.9rem
+          color: color.adjust($text-color, $lightness: 30%)
+
+      .alert-actions
+        display: flex
+        flex-direction: row
+        flex: 1
+        gap: $xl
+        width: 100%
+
   .content-wrapper
     display: flex
     width: 200vw

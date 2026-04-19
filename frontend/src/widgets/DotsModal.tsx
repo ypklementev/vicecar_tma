@@ -4,6 +4,7 @@ import {useModal} from "@/modules/modal/context/ModalContext.tsx";
 import {useAppContext} from "@/app/context/AppContext.tsx";
 import type {Service} from "@/shared/types/types.ts";
 import type {ModalType} from "@/modules/modal/modals/types";
+import {useAlert} from "@/modules/alert/context/AlertsContext.tsx";
 
 
 interface DotsModalProps {
@@ -15,6 +16,7 @@ interface DotsModalProps {
 export const DotsModal = ({itemId, defaultValues, type}: DotsModalProps) => {
     const { setMenuId } = useAppContext()
     const { openModal } = useModal()
+    const { openAlert } = useAlert()
     const modalRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -84,6 +86,7 @@ export const DotsModal = ({itemId, defaultValues, type}: DotsModalProps) => {
             <button
                 className="dots-button delete"
                 onClick={() => {
+                    openAlert({type: "deleteService", props: {serviceId: itemId}})
                     close()
                 }}
             >

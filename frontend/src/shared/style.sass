@@ -18,6 +18,14 @@
   cursor: pointer
   transition: all .1s ease
 
+  &.smaller
+    padding: $xl $xl
+
+  &.btn-cancel
+    background-color: $background-color
+    border: 1px solid $border-color
+    color: $text-color
+
   .success
     display: flex
     flex-direction: row
@@ -36,6 +44,10 @@
         background-size: 1.2rem 1.2rem
         width: 1.2rem
         height: 1.2rem
+
+  &.btn-delete
+    background-color: $error-color
+
 
   &[disabled]
     cursor: not-allowed
