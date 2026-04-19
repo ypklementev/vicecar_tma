@@ -56,7 +56,7 @@ export const useEditService = (serviceId: number | undefined) => {
         onSuccess: async () => {
             await Promise.all([
                 queryClient.invalidateQueries({ queryKey: ["maintenance"] }),
-                queryClient.invalidateQueries({ queryKey: ["services"] }),
+                queryClient.invalidateQueries({ queryKey: ["repairs"] }),
             ])
         }
     })

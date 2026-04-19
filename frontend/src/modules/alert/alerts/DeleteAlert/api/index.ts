@@ -12,7 +12,7 @@ export const useDeleteService = (serviceId: number) => {
         onSuccess: async () => {
             await Promise.all([
                 queryClient.invalidateQueries({ queryKey: ["maintenance"] }),
-                queryClient.invalidateQueries({ queryKey: ["services"] }),
+                queryClient.invalidateQueries({ queryKey: ["repairs"] }),
             ])
         }
     })
