@@ -5,11 +5,11 @@ import {useAlert} from "@/modules/alert/context/AlertsContext.tsx";
 
 export const useHandler = (serviceId: number) => {
     const mutation = useDeleteService(serviceId)
-    const { closeAlert } = useAlert()
+    const { animatedCloseRef } = useAlert()
 
     const onSubmit = useCallback(() => {
         mutation.mutate(undefined, {
-            onSuccess: () => setTimeout(() => closeAlert(), 500)
+            onSuccess: () => setTimeout(() => animatedCloseRef.current?.(), 500)
         })
     }, [serviceId])
 

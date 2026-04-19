@@ -61,13 +61,9 @@ export const ServiceCard = ({ service }: Props) => {
     }
 
     useEffect(() => {
-        if (!containerRef.current || !expanded) return
+        if (!expanded) return
 
-        gsap.to(containerRef.current, {
-            height: "auto",
-            duration: 0.3,
-            ease: "power2.out",
-        })
+        setExpanded(!expanded)
     }, [service])
 
     return (

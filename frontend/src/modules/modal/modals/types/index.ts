@@ -6,7 +6,7 @@ export type ModalType =
     | "addMaintenance"
     | "addRepair"
     | "editMaintenance"
-    | "editService"
+    | "editRepair"
     | null
 
 export type ServiceFormMode = "addMaintenance" | "addRepair" | "editMaintenance" | "editRepair"

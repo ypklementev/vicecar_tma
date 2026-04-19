@@ -1,6 +1,7 @@
 import { Button, Loader } from "@/shared/ui"
 import { Success } from "@/shared/ui/Success.tsx"
 import {useHandler} from "@/modules/alert/alerts/DeleteAlert/hooks/useHandler.ts";
+import {useAlert} from "@/modules/alert/context/AlertsContext.tsx";
 
 
 interface DeleteAlertProps {
@@ -9,6 +10,7 @@ interface DeleteAlertProps {
 
 export const DeleteAlert = ({ serviceId }: DeleteAlertProps) => {
     const { onSubmit, mutation } = useHandler(serviceId)
+    const { animatedCloseRef } = useAlert()
 
     return (
         <div className="alert-content">
@@ -22,6 +24,7 @@ export const DeleteAlert = ({ serviceId }: DeleteAlertProps) => {
                     name={"cancel"}
                     label={"Отменить"}
                     customClass={"smaller btn-cancel"}
+                    onClick={() => animatedCloseRef.current?.()}
                 />
                 <Button
                     name="deleteService"
