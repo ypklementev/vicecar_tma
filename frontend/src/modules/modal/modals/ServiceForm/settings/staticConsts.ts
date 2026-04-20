@@ -5,7 +5,7 @@ export const MAINTENANCE_CATEGORIES = [
     { type: "brake_fluid", name: "Замена тормозной жидкости" },
     { type: "coolant", name: "Замена охлаждающей жидкости" },
     { type: "gear_oil", name: "Замена масла КПП" },
-    { type: "gear_oil_filter", name: "Замена маскляного фильтра КПП" },
+    { type: "gear_oil_filter", name: "Замена масляного фильтра КПП" },
     { type: "fuel_filter", name: "Замена топливного фильтра" },
     { type: "spark_plug", name: "Замена свечей зажигания" },
     { type: "air_filter_cabin", name: "Замена салонного фильтра" }

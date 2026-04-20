@@ -28,7 +28,11 @@ export const useAddMaintenance = (carId: number | undefined) => {
         mutationFn: (maintenance: Partial<Service>) => api(`/maintenance/${carId}`, { data: maintenance, method: "POST" }),
 
         onSuccess: async () => {
-            await queryClient.invalidateQueries({queryKey: ["maintenance"]})
+            await Promise.all([
+                queryClient.invalidateQueries({queryKey: ["cars"]}),
+                queryClient.invalidateQueries({queryKey: ["maintenance"]}),
+            ])
+
         }
     })
 }
@@ -41,7 +45,10 @@ export const useAddRepair = (carId: number | undefined) => {
         mutationFn: (repair: Partial<Service>) => api(`/repairs/${carId}`, { data: repair, method: "POST" }),
 
         onSuccess: async () => {
-            await queryClient.invalidateQueries({queryKey: ["repairs"]})
+            await Promise.all([
+                queryClient.invalidateQueries({queryKey: ["cars"]}),
+                queryClient.invalidateQueries({queryKey: ["repairs"]}),
+            ])
         }
     })
 }
@@ -55,6 +62,7 @@ export const useEditService = (serviceId: number | undefined) => {
 
         onSuccess: async () => {
             await Promise.all([
+                queryClient.invalidateQueries({ queryKey: ["cars"] }),
                 queryClient.invalidateQueries({ queryKey: ["maintenance"] }),
                 queryClient.invalidateQueries({ queryKey: ["repairs"] }),
             ])
