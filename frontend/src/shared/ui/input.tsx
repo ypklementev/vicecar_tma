@@ -1,5 +1,5 @@
-import { type InputHTMLAttributes, useEffect, useRef } from "react";
-import gsap from "gsap";
+import { type InputHTMLAttributes, useRef } from "react";
+import {useInputGsap} from "@/shared/hooks/useInputGsap.tsx";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -9,20 +9,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export const Input = ({ label, name, error, ...rest }: InputProps) => {
   const errorRef = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    if (!errorRef.current) return;
-
-    if (error) {
-      gsap.fromTo(
-          errorRef.current,
-          { opacity: 0, y: -6 },
-          { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" }
-      );
-    } else {
-      gsap.to(errorRef.current, { opacity: 0, y: -6, duration: 0.2 });
-    }
-  }, [error]);
+  useInputGsap({ error, errorRef })
 
   return (
       <div className="input-wrapper">
@@ -35,8 +22,8 @@ export const Input = ({ label, name, error, ...rest }: InputProps) => {
         />
         {error && (
             <span className="input-error" ref={errorRef}>
-          {error}
-        </span>
+              {error}
+            </span>
         )}
       </div>
   );

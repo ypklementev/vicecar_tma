@@ -18,6 +18,14 @@
   cursor: pointer
   transition: all .1s ease
 
+  &.smaller
+    padding: $xl $xl
+
+  &.btn-cancel
+    background-color: $background-color
+    border: 1px solid $border-color
+    color: $text-color
+
   .success
     display: flex
     flex-direction: row
@@ -36,6 +44,10 @@
         background-size: 1.2rem 1.2rem
         width: 1.2rem
         height: 1.2rem
+
+  &.btn-delete
+    background-color: $error-color
+
 
   &[disabled]
     cursor: not-allowed
@@ -57,6 +69,10 @@
     background-color: color.adjust($text-color, $lightness: 30%)
     color: $background-color
 
+.input-error
+  font-size: 12px
+  color: #ff4d4f
+  margin-left: $xs
 
 .input-wrapper
   display: flex
@@ -67,10 +83,6 @@
   .custom-input.error
     border-color: #ff4d4f
 
-  .input-error
-    font-size: 12px
-    color: #ff4d4f
-    margin-left: $xs
 
   .label
     font-size: $font-sm
@@ -85,6 +97,10 @@
     background-color: $background-color
     border: 1px solid $border-color
     transition: background-color .2s ease
+    width: 100%
+
+    &[data-empty="true"]
+      color: color.adjust($text-color, $lightness: 30%)
 
     &:focus
       background-color: $modal-background
@@ -124,18 +140,44 @@
     flex-direction: column
     gap: $lg
 
-    .maintenance-card
+    .service-modal-card
       display: flex
       flex-direction: column
       border: 1px solid $border-color
       padding: $xl
-      border-radius: $md
+      border-radius: $xl
+      gap: $sm
 
-      .maintenance-card__header
+      .service-modal-card__header
         display: flex
         flex-direction: row
         justify-content: space-between
         border-radius: $sm
+        gap: $md
+
+      .service-modal-card__remove
+        cursor: pointer
+        display: flex
+        align-items: center
+        justify-content: center
+        width: 40px
+        height: 40px
+        border: none
+        background-color: $error-color
+        color: $background-color
+        border-radius: $md
+
+  .btn-add-category
+    display: flex
+    align-self: end
+    font-size: $font-sm
+    justify-content: center
+    width: fit-content
+    border: none
+    background: $background-color
+    padding: $lg $xxl
+    border-radius: $lg
+    color: $text-color
 
 .maintenance-list
   display: flex

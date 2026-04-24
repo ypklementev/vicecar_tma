@@ -1,0 +1,1 @@
+export { DeleteAlert as default } from "./DeleteAlert.tsx"

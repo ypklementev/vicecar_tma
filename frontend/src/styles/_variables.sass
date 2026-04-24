@@ -5,7 +5,7 @@ $background-color: #f4f5f7
 $text-color: #171717
 $border-color: #d8d8d8
 $modal-background: #fff
-$error-color: #f5222f
+$error-color: #f3515b
 $success-color: #3fe83f
 
 
@@ -71,7 +71,7 @@ $height: var(--tg-viewport-height, 100vh)
 
   .card-menu-button
     height: $font-lg
-    width: $font-lg
+    width: $font-xxxl
     border: none
     background-color: transparent
     border-radius: 50%
@@ -108,6 +108,11 @@ $height: var(--tg-viewport-height, 100vh)
     flex-direction: row
     justify-content: space-between
     position: relative
+
+    span.empty-name
+      font-size: 1rem
+      font-style: italic
+      color: color.adjust($text-color, $lightness: 30%)
 
   @include card-shadow
 

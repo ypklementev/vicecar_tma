@@ -1,7 +1,7 @@
 import axios from "axios"
 import { initData } from "./telegram"
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query"
-import type { CarApi, Cars, Maintenances, RepairsApi, User } from "@/types/types.ts"
+import type { CarApi, Cars, User } from "@/shared/types/types.ts"
 
 
 const apiClient = axios.create({
@@ -20,7 +20,7 @@ apiClient.interceptors.request.use((config) => {
   return config;
 })
 
-async function api<T = unknown>(
+export async function api<T = unknown>(
   url: string,
   config?: any
 ): Promise<T> {
@@ -42,22 +42,6 @@ export const useGetUser = () => {
   });
 }
 
-export const useGetMaintenance = (carId?: number | undefined) => {
-  return useQuery<Maintenances[]>({
-    queryKey: ["maintenance", carId],
-    queryFn: () => api(`/maintenance/${carId}`),
-    enabled: !!carId
-  })
-}
-
-export const useGetRepairs = (carId?: number) => {
-  return useQuery<RepairsApi>({
-    queryKey: ["repairs", carId],
-    queryFn: () => api(`/repairs/${carId}`),
-    enabled: !!carId
-  })
-}
-
 export const useAddCar = () => {
   const queryClient = useQueryClient()
 
@@ -71,28 +55,3 @@ export const useAddCar = () => {
   })
 }
 
-export const useAddMaintenance = (carId: number | undefined) => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationKey: ["addMaintenance"],
-    mutationFn: (maintenance: Maintenances) => api(`/maintenance/${carId}`, { data: maintenance, method: "POST" }),
-
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({queryKey: ["maintenance"]})
-    }
-  })
-}
-
-export const useAddRepair = (carId: number | undefined) => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationKey: ["addMaintenance"],
-    mutationFn: (repair: Maintenances) => api(`/repairs/${carId}`, { data: repair, method: "POST" }),
-
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({queryKey: ["repairs"]})
-    }
-  })
-}

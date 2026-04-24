@@ -222,6 +222,44 @@ body
       overflow-y: auto
       max-height: 80vh
 
+  .alert
+    z-index: 10
+    display: flex
+    position: fixed
+    width: clamp(200px, 90vw, 500px)
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    background-color: $background-color
+    padding: $xxl $xxxl
+    border-radius: $xxl
+
+    .alert-content
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+      gap: $xxl
+      width: 100%
+
+      .alert-info
+        display: flex
+        flex-direction: column
+        align-items: center
+        justify-content: center
+        gap: $sm
+
+        span
+          font-size: $font-sm
+          color: color.adjust($text-color, $lightness: 30%)
+
+      .alert-actions
+        display: flex
+        flex-direction: row
+        flex: 1
+        gap: $xl
+        width: 100%
+
   .content-wrapper
     display: flex
     width: 200vw
@@ -279,61 +317,32 @@ body
           font-size: $font-sm
           color: color.adjust($text-color, $lightness: 30%)
 
-  .maintenances-container
+  .services-container
     @include container
 
-    .maintenances-item
-      @include container-item
-
-      span
-        font-size: $font-sm
-        color: color.adjust($text-color, $lightness: 30%)
-
-    .maintenances-wrapper
-      display: flex
-      flex-direction: column
-
-      .maintenance-container
-        height: 0
-        overflow: hidden
-        display: flex
-        flex-direction: column
-        gap: $sm
-
-        .maintenance-item
-          display: flex
-          flex-direction: row
-          justify-content: space-between
-          &:first-child
-            margin-top: $xs
-            padding-top: $sm
-            border-top: 1px solid $border-color
-
-  .repairs-container
-    @include container
-
-    .repairs-item
+    .services-item
       @include container-item
 
       & span
         font-size: $font-sm
         color: color.adjust($text-color, $lightness: 30%)
 
-    .repair-wrapper
+    .services-wrapper
       display: flex
       flex-direction: column
 
-      .repair-container
+      .service-container
         height: 0
         overflow: hidden
         display: flex
         flex-direction: column
         gap: $sm
 
-        .repair-item
+        .service-item
           display: flex
           flex-direction: row
           justify-content: space-between
+
           &:first-child
             margin-top: $xs
             padding-top: $sm

@@ -9,14 +9,13 @@ interface SuccessProps {
 
 export const Success = ({ text }: SuccessProps) => {
     const spanIconRef = useRef<HTMLSpanElement>(null)
-    const spanTextRef = useRef<HTMLSpanElement>(null)
 
     useEffect(() => {
         gsap.fromTo(
             spanIconRef.current,
             {
                 scale: 0,
-                rotate: '270'
+                rotate: '-270'
             },
             {
                 scale: 1,
@@ -25,24 +24,10 @@ export const Success = ({ text }: SuccessProps) => {
                 ease: 'easeOut'
             }
         )
-
-        gsap.fromTo(
-            spanTextRef.current,
-            {
-                translateX: "-100%",
-                opacity: 0,
-            },
-            {
-                translateX: "0",
-                opacity: 1,
-                duration: 0.2,
-                ease: "power2.easeInOut",
-            }
-        )
     })
 
     return (
-        <span className="success" ref={spanTextRef}>
+        <span className="success">
             {text}
             <span ref={spanIconRef} className="success__icon" />
         </span>
