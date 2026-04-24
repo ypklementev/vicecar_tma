@@ -10,7 +10,6 @@ export const useHandler = (mode: ServiceFormMode, id: number) => {
         addRepair:       useAddRepairHandler(),
         editMaintenance: useEditServiceHandler({serviceId: id}),
         editRepair:      useEditServiceHandler({serviceId: id}),
-        // editService:     useEditServiceHandler({serviceId: id}),
     }
     return handlers[mode]
 }

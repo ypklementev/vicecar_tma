@@ -45,6 +45,17 @@ export const ServiceForm = ({ mode, defaultValues, id, type }: ServiceFormProps)
                 <Input
                     label="Пробег*"
                     placeholder="Введите пробег"
+                    type="date"
+                    error={errors.date?.message}
+                    {...register("date", {
+                        required: "Укажите дату",
+                        min: { value: "1900-01-01", message: "Дата не может быть раньше 1900 года" },
+                    })}
+                />
+
+                <Input
+                    label="Пробег*"
+                    placeholder="Введите пробег"
                     type="text"
                     error={errors.mileage?.message}
                     {...register("mileage", {

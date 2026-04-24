@@ -4,10 +4,12 @@ import {ServiceBookPage} from "@/modules/cars/content/ServiceBookPage.tsx"
 import gsap from "gsap"
 import {useCarPage} from "@/shared/hooks/useCarPage.tsx";
 import {useModalButton} from "@/modules/modal/modals/ServiceForm/hooks/useModalButton.tsx";
+import {useGetCars} from "@/api/api.ts";
 
 
 export const CarInfoPage = () => {
   const { activePage } = useCarPage()
+  const cars = useGetCars()
 
   useModalButton({
     modalType: activePage === "maintenance" ? "addMaintenance" : "addRepair",
@@ -37,6 +39,12 @@ export const CarInfoPage = () => {
       ease: "power3.out"
     })
   }, [activePage])
+
+  if (cars.isError) return (
+      <div className={"error-page"}>
+        <h2>Ошибка загрузки</h2>
+      </div>
+  )
 
   return (
     <div className="content-wrapper" ref={contentRef}>

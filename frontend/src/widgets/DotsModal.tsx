@@ -76,7 +76,7 @@ export const DotsModal = ({itemId, defaultValues, type}: DotsModalProps) => {
             <button
                 className="dots-button edit"
                 onClick={() => {
-                    openModal(type, { mode: type, id: itemId, defaultValues: defaultValues, type: "edit" })
+                    openModal(type, { mode: type, id: itemId, defaultValues: {...defaultValues, date: defaultValues?.date?.split('T')[0]}, type: "edit" })
                     close()
                 }}
             >

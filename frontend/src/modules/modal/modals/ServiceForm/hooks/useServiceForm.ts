@@ -14,6 +14,7 @@ export const useServiceForm = (options?: UseServiceFormOptions) => {
         delayError: 500,
         defaultValues: options?.defaultValues ?? {
             mileage: car?.current_mileage,
+            date: new Date().toISOString().split('T')[0],
             items: [],
         },
     })

@@ -12,7 +12,7 @@ export const useAddRepairHandler = () => {
     const onSubmit = (data: Service) => {
         const payload: Partial<Service> = {
             service_type: "repair",
-            date: new Date(),
+            date: data.date.split('T')[0],
             mileage: data.mileage,
             comment: data.comment,
             items: data.items,

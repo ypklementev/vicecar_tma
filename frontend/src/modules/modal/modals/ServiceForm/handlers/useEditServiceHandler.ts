@@ -14,7 +14,7 @@ export const useEditServiceHandler = ({serviceId}: useEditServiceHandlerProps) =
     const onSubmit = (data: Service) => {
         const payload: Partial<Service> = {
             service_type: data.service_type,
-            date: data.date,
+            date: data.date.split('T')[0],
             mileage: data.mileage,
             comment: data.comment,
             items: data.items,

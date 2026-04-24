@@ -34,7 +34,7 @@ export interface Service {
   id: number,
   car_id: number,
   service_type: "maintenance" | "repair",
-  date: Date,
+  date: string,
   mileage: number,
   total_cost: number,
   comment: string,
